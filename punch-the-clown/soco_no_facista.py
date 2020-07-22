@@ -1,18 +1,16 @@
-import os, sys
+import os, sys, random
 import pygame
 from pygame.locals import *
 
 if not pygame.font: print('Warning, fonts disabled')
 if not pygame.mixer: print('Warning, sound disabled')
 
-imagem = 'corona_mask.png'
-som = 'laser1.wav'
 
 class Punho(pygame.sprite.Sprite):
 
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)  # chama o iniciador do Sprite
-		self.image, self.rect = carregar_imagem('fist.png', -1)
+		self.image, self.rect = carregar_imagem('fist.png', (60, 60), -1)
 		#pygame.transform.scale(self.image, (20, 20))
 		self.soco = 0
 
@@ -38,12 +36,12 @@ class Algum_Babaca(pygame.sprite.Sprite):
 	
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image, self.rect = carregar_imagem('palhaco.png', -1)
+		self.image, self.rect = carregar_imagem('palhaco.png', (200, 200), -1)
 		#pygame.transform.scale(self.image, (20, 20))
 		tela = pygame.display.get_surface()  # pega o tamnho da tela e o aplica logo em seguida
 		self.area = tela.get_rect()
 		self.rect.topleft = 10, 10
-		self.movimento = 9
+		self.movimento = -1
 		self.tonto = 0
 
 	def update(self):
@@ -74,15 +72,21 @@ class Algum_Babaca(pygame.sprite.Sprite):
 		self.rect = self.image.get_rect(center=centro)  # garante que a imagem nunca saia do lugar enquanto rotaciona
 
 	def socado(self):
+		if self.movimento >= 0:
+			self.movimento += 1
+		else:
+			self.movimento -= 1
+
 		if not self.tonto:
 			self.tonto = 1
 			self.original = self.image  # salva a img original pois na rotação ela fica maior
 
 
-def carregar_imagem(imagem, colorkey=None):
-	caminho_imagem = os.path.join('C:\\Users\\Wercton\\Desktop\\Profissional\\python aleatorio\\pygame', imagem)
+def carregar_imagem(imagem, tamanho, colorkey=None):
+	caminho_imagem = os.path.join('.\\imagens', imagem)
 	try:
 		imagem = pygame.image.load(caminho_imagem)
+		imagem = pygame.transform.scale(imagem, tamanho)
 	except pygame.error as message:
 		print('Imagem não encontrada:', imagem)
 		raise SystemExit(message)
@@ -99,7 +103,7 @@ def carregar_som(som):
 		def play(self): pass
 	if not pygame.mixer:
 		return NoneSound()
-	caminho_som = os.path.join('C:\\Users\\Wercton\\Desktop\\Profissional\\python aleatorio\\pygame\\sound', som)
+	caminho_som = os.path.join('.\\sons', som)
 	try:
 		som = pygame.mixer.Sound(caminho_som)
 	except pygame.error as message:
@@ -129,24 +133,92 @@ def criando_font():
 	imagem_de_fundo.blit(texto, texto_pos)
 
 
-if __name__ == '__main__':
-	
-	pygame.init()
+def exibindo_pontuacao(pontuacao):
+	fonte = pygame.font.Font(None, 26)
+	texto_pontuacao = fonte.render("{0} socão".format(pontuacao), 1, (0, 0, 0))
+	return texto_pontuacao
 
-	tela = criando_tela(tamanho=(768, 560), nome='Socão no Bozo')
 
-	imagem_de_fundo = criando_fundão(cor=(250, 250, 250))
-	criando_font()
+def desenhar_texto(texto, cor, tela, x, y):
+	fonte = pygame.font.Font(None, 26)
+	texto_objeto = fonte.render(texto, 1, cor)
+	texto_rect = texto_objeto.get_rect()
+	texto_rect.topleft = (x, y)
+	return texto_objeto, texto_rect
+	#tela.blit(texto_objeto, texto_rect)
+
+
+def menu_principal():
+
+	caminho_imagem = os.path.join('.\\imagens', 'gado.jpg')
+	fundo_menu = pygame.image.load(caminho_imagem)
+	fundo_menu = pygame.transform.scale(fundo_menu, tamanho_tela)
+
+	caminho_imagem = os.path.join('.\\imagens', 'botao.png')
+	botao = pygame.image.load(caminho_imagem)
+	botao = pygame.transform.scale(botao, (135, 100))
+
+	tela.blit(fundo_menu, (0, 0))
+
+	botao_1 = pygame.Rect(230, 50, 135, 100)
+
+	click = False
+	while 1:
+
+		mx, my = pygame.mouse.get_pos()
+		pygame.draw.rect(tela, (250, 0, 0), botao_1)
+
+		if botao_1.collidepoint((mx, my)):
+			if click:
+				game()
+
+		click = False
+		for event in pygame.event.get():
+			if event.type == QUIT:
+				pygame.quit()
+				sys.exit()
+			if event.type == KEYDOWN:
+				if event.type == K_ESCAPE:
+					pygame.quit()
+					sys.quit()
+			if event.type == MOUSEBUTTONDOWN:
+				if event.button:
+					click = True
+
+		texto, texto_rect = desenhar_texto("Jogar", (250, 250, 250), tela, 275, 90)
+
+		tela.blit(fundo_menu, (0, 0))
+		tela.blit(botao, (230, 50))
+		tela.blit(texto, texto_rect)
+		todos_sprites.draw(tela)
+
+		pygame.display.update()
+		todos_sprites.update()
+
+		tempo.tick(60)
+
+
+def game():
 
 	tela.blit(imagem_de_fundo, (0, 0))
 	pygame.display.flip()
 
-	som_erro = None  # encontrar um
-	som_acerto = carregar_som('laser1.wav')
-	babaca = Algum_Babaca()
-	punho = Punho()
+	caminho_imagem = os.path.join('.\\imagens', 'primeira_fase.jpg')
+	primeira_fase = pygame.image.load(caminho_imagem)
+	primeira_fase = pygame.transform.scale(primeira_fase, tamanho_tela)
+
+	caminho_imagem = os.path.join('.\\imagens', 'segunda_fase.jpg')
+	segunda_fase = pygame.image.load(caminho_imagem)
+	segunda_fase = pygame.transform.scale(segunda_fase, tamanho_tela)
+
+	caminho_imagem = os.path.join('.\\imagens', 'terceira_fase.jpg')
+	terceira_fase = pygame.image.load(caminho_imagem)
+	terceira_fase = pygame.transform.scale(terceira_fase, tamanho_tela)
+
 	todos_sprites = pygame.sprite.RenderPlain((babaca, punho))
-	tempo = pygame.time.Clock()
+	pontuacao = 0
+
+	fase_atual = primeira_fase
 
 	while 1:
 		tempo.tick(60)
@@ -156,15 +228,67 @@ if __name__ == '__main__':
 			elif event.type == KEYDOWN and event.key == K_ESCAPE:
 				pass
 			elif event.type == MOUSEBUTTONDOWN:
-				if punho.socão(babaca):
-					som_acerto.play()
-					babaca.socado()
-				else:
-					print('missed!')
+				if babaca.tonto == 0:  # consertando bug de murros infinitos
+					if punho.socão(babaca):
+						som_erro.stop()
+						som_queimar.stop()
+						som_acerto.play()
+
+						escolher_som_aleatoriamente = random.randint(0, 4)
+						if escolher_som_aleatoriamente == 0: som_vagabundo.play()
+						elif escolher_som_aleatoriamente == 1: som_queimar.play()
+						elif escolher_som_aleatoriamente == 2: som_porra.play()
+						
+						babaca.socado()
+						pontuacao += 1
+					else:
+						som_erro.play()
+						if babaca.movimento >= 0:
+							babaca.movimento = 1
+						else:
+							babaca.movimento = -1
+						pontuacao = 0
 			elif event.type == MOUSEBUTTONUP:
 				punho.errou_socão()
 
+		if pontuacao < 10:
+			fase_atual = primeira_fase
+		elif pontuacao < 20:
+			fase_atual = segunda_fase
+		else:
+			fase_atual = terceira_fase
+
+		tela.fill((250, 250, 250))
+		tela.blit(fase_atual, (0, 0))
+		criando_font()
 		todos_sprites.update()
-		tela.blit(imagem_de_fundo, (0, 0))
+		tela.blit(exibindo_pontuacao(pontuacao), (0, 0))
 		todos_sprites.draw(tela)
+		pygame.display.update()  # necessário?
 		pygame.display.flip()
+
+
+if __name__ == '__main__':
+	
+	pygame.init()
+
+	tamanho_tela = (650, 200)
+	tela = criando_tela(tamanho_tela, nome='Socão no Bozo')
+	
+	imagem_de_fundo = criando_fundão(cor=(250, 250, 250))
+	criando_font()
+
+	som_erro = carregar_som('risada.ogg')  # encontrar um
+	som_acerto = carregar_som('PUNCH.wav')
+	som_vagabundo = carregar_som('vagabundo.ogg')
+	som_queimar = carregar_som('queimar.ogg')
+	som_porra = carregar_som('porra.ogg')
+
+	babaca = Algum_Babaca()
+	punho = Punho()
+	todos_sprites = pygame.sprite.RenderPlain((punho))
+	tempo = pygame.time.Clock()
+
+	menu_principal()
+
+	pygame.quit()
