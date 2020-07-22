@@ -234,7 +234,7 @@ def game():
 						som_queimar.stop()
 						som_acerto.play()
 
-						escolher_som_aleatoriamente = random.randint(0, 4)
+						escolher_som_aleatoriamente = random.randint(0, 5)
 						if escolher_som_aleatoriamente == 0: som_vagabundo.play()
 						elif escolher_som_aleatoriamente == 1: som_queimar.play()
 						elif escolher_som_aleatoriamente == 2: som_porra.play()
