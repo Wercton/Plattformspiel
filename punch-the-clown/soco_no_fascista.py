@@ -128,13 +128,6 @@ def criando_tela(tamanho, nome):
 	return tela
 
 
-def criando_font():
-	fonte = pygame.font.Font(None, 26)
-	texto = fonte.render("METE O SOCÃO NESSE GENOCIDA DE MERDA", 1, (10, 10, 10))
-	texto_pos = texto.get_rect(centerx=imagem_de_fundo.get_width()//2)
-	imagem_de_fundo.blit(texto, texto_pos)
-
-
 def exibindo_pontuacao(pontuacao):
 	fonte = pygame.font.Font(None, 26)
 	texto_pontuacao = fonte.render("{0} socão".format(pontuacao), 1, (0, 0, 0))
@@ -340,6 +333,7 @@ def game():
 			if click:
 				som_erro.stop()
 				som_queimar.stop()
+				som_inicio.stop()
 				menu_principal()
 
 		click = False
@@ -348,7 +342,6 @@ def game():
 		tela.blit(fase_atual, (0, 0))
 		todos_sprites.update()
 
-		criando_font()
 		texto, texto_rect = desenhar_texto("Voltar", (250, 250, 250), tela, 540, 10)
 
 		tela.blit(fase_atual, (0, 0))
@@ -368,7 +361,6 @@ if __name__ == '__main__':
 	tela = criando_tela(tamanho_tela, nome='Socão no Bozo')
 	
 	imagem_de_fundo = criando_fundão(cor=(250, 250, 250))
-	criando_font()
 
 	som_erro = carregar_som('risada.ogg')
 	som_acerto = carregar_som('PUNCH.wav')
