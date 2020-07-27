@@ -1,7 +1,7 @@
 import pygame, sys
 from pygame.locals import *
-import personagem
-import objeto_de_colisao
+import Personagem
+import Objeto_de_colisao
 
 tamanhoTela = (400, 400)
 clock = pygame.time.Clock()
@@ -15,13 +15,6 @@ def configurando_tela():
 	pygame.display.set_caption("Jogo de Plataforma")
 
 	return tela
-
-
-def fabrica_de_objeto():
-
-	teste = objeto_de_colisao.Objeto_colisao()
-	
-	return teste
 
 
 def jogo_loop():
@@ -88,5 +81,5 @@ if __name__ == '__main__':
 
 	tela = configurando_tela()
 	delta = personagem.Personagem("imagens/delta_roxo.png")
-	teste = fabrica_de_objeto()
+	teste = objeto_de_colisao.Objeto_colisao()
 	jogo_loop()

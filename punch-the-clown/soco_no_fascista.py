@@ -1,6 +1,14 @@
 import os, sys, random
+import pkg_resources.py2_warn
 import pygame
 from pygame.locals import *
+
+def resource_path(relative_path):
+    if hasattr(sys, '_MEIPASS'):
+        return os.path.join(sys._MEIPASS, relative_path)
+    return os.path.join(os.path.abspath("."), relative_path)
+
+
 
 dirpath = os.getcwd()
 if getattr(sys, "frozen", False):
@@ -14,7 +22,7 @@ class Punho(pygame.sprite.Sprite):
 
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)  # chama o iniciador do Sprite
-		self.image, self.rect = carregar_imagem('fist.png', (60, 60), -1)
+		self.image, self.rect = carregar_imagem('data/fist.png', (60, 60), -1)
 		self.soco = 0
 
 	def update(self):
@@ -39,7 +47,7 @@ class Algum_Babaca(pygame.sprite.Sprite):
 	
 	def __init__(self):
 		pygame.sprite.Sprite.__init__(self)
-		self.image, self.rect = carregar_imagem('palhaco.png', (200, 200), -1)
+		self.image, self.rect = carregar_imagem('data/palhaco.png', (200, 200), -1)
 		tela = pygame.display.get_surface()  # pega o tamnho da tela e o aplica logo em seguida
 		self.area = tela.get_rect()
 		self.rect.topleft = 10, 10
@@ -85,7 +93,7 @@ class Algum_Babaca(pygame.sprite.Sprite):
 
 
 def carregar_imagem(imagem, tamanho, colorkey=None):
-	caminho_imagem = os.path.join('.\\imagens', imagem)
+	caminho_imagem = os.path.join('.', imagem)
 	try:
 		imagem = pygame.image.load(caminho_imagem)
 		imagem = pygame.transform.scale(imagem, tamanho)
@@ -94,7 +102,7 @@ def carregar_imagem(imagem, tamanho, colorkey=None):
 		raise SystemExit(message)
 	imagem = imagem.convert()
 	if colorkey is not None:
-		if colorkey is -1:
+		if colorkey == -1:
 			colorkey = imagem.get_at((0, 0))
 		imagem.set_colorkey(colorkey, RLEACCEL)
 	return imagem, imagem.get_rect()
@@ -105,7 +113,7 @@ def carregar_som(som):
 		def play(self): pass
 	if not pygame.mixer:
 		return NoneSound()
-	caminho_som = os.path.join('.\\sons', som)
+	caminho_som = os.path.join('.', som)
 	try:
 		som = pygame.mixer.Sound(caminho_som)
 	except pygame.error as message:
@@ -147,12 +155,10 @@ def menu_principal():
 	som_inicio.set_volume(0.07)
 	som_inicio.play()
 
-	caminho_imagem = os.path.join('.\\imagens', 'gado.jpg')
-	fundo_menu = pygame.image.load(caminho_imagem)
+	fundo_menu = pygame.image.load("data/gado.jpg")
 	fundo_menu = pygame.transform.scale(fundo_menu, tamanho_tela)
 
-	caminho_imagem = os.path.join('.\\imagens', 'botao.png')
-	botao = pygame.image.load(caminho_imagem)
+	botao = pygame.image.load('data/botao.png')
 	botao = pygame.transform.scale(botao, (135, 100))
 
 	tela.blit(fundo_menu, (0, 0))
@@ -197,11 +203,10 @@ def menu_principal():
 
 def vitoria():
 
-	som_final = carregar_som('vitoria.ogg')
+	som_final = carregar_som('data/vitoria.ogg')
 	som_final.play()
 
-	caminho_imagem = os.path.join('.\\imagens', 'vitoria.jpg')
-	fundo_vitoria = pygame.image.load(caminho_imagem)
+	fundo_vitoria = pygame.image.load('data/vitoria.jpg')
 	fundo_vitoria = pygame.transform.scale(fundo_vitoria, (tamanho_tela[0]//2,tamanho_tela[1]))
 
 	botao_voltar = pygame.Rect(230, 50, 135, 100)
@@ -248,24 +253,19 @@ def game():
 	pygame.display.flip()
 
 	botao_voltar = pygame.Rect(500, 0, 135, 20)
-	caminho_imagem = os.path.join('.\\imagens', 'botao.png')
-	botao = pygame.image.load(caminho_imagem)
+	botao = pygame.image.load("data/botao.png")
 	botao = pygame.transform.scale(botao, (235, 100))
 
-	caminho_imagem = os.path.join('.\\imagens', 'primeira_fase.jpg')
-	primeira_fase = pygame.image.load(caminho_imagem)
+	primeira_fase = pygame.image.load("data/primeira_fase.jpg")
 	primeira_fase = pygame.transform.scale(primeira_fase, tamanho_tela)
 
-	caminho_imagem = os.path.join('.\\imagens', 'segunda_fase.jpg')
-	segunda_fase = pygame.image.load(caminho_imagem)
+	segunda_fase = pygame.image.load("data/segunda_fase.jpg")
 	segunda_fase = pygame.transform.scale(segunda_fase, tamanho_tela)
 
-	caminho_imagem = os.path.join('.\\imagens', 'terceira_fase.jpg')
-	terceira_fase = pygame.image.load(caminho_imagem)
+	terceira_fase = pygame.image.load("data/terceira_fase.jpg")
 	terceira_fase = pygame.transform.scale(terceira_fase, tamanho_tela)
 
-	caminho_imagem = os.path.join('.\\imagens', 'democracia.jpg')
-	quarta_fase = pygame.image.load(caminho_imagem)
+	quarta_fase = pygame.image.load("data/democracia.jpg")
 	quarta_fase = pygame.transform.scale(quarta_fase, tamanho_tela)
 
 	todos_sprites = pygame.sprite.RenderPlain((babaca, punho))
@@ -362,12 +362,16 @@ if __name__ == '__main__':
 	
 	imagem_de_fundo = criando_fundão(cor=(250, 250, 250))
 
-	som_erro = carregar_som('risada.ogg')
-	som_acerto = carregar_som('PUNCH.wav')
-	som_vagabundo = carregar_som('vagabundo.ogg')
-	som_queimar = carregar_som('queimar.ogg')
-	som_porra = carregar_som('porra.ogg')
-	som_inicio = carregar_som('bella-ciao.wav')
+	#som_erro = carregar_som('risada.ogg')
+	#caminho_som = os.path.join('.\\sons', som)
+	som_erro = pygame.mixer.Sound('data/risada.ogg')
+	som_acerto = carregar_som('data/PUNCH.wav')
+	som_vagabundo = carregar_som('data/vagabundo.ogg')
+	som_queimar = carregar_som('data/queimar.ogg')
+	som_porra = carregar_som('data/porra.ogg')
+	som_inicio = carregar_som('data/bella-ciao.wav')
+
+
 
 	babaca = Algum_Babaca()
 	punho = Punho()
