@@ -2,6 +2,11 @@
 
 
 # My PyGames
+
+[![GitHub commit activity the past week, 4 weeks, year](https://img.shields.io/github/commit-activity/y/wercton/My-PyGames?color=orange)](https://github.com/Wercton/My-PyGames)
+[![GitHub last commit](https://img.shields.io/github/last-commit/Wercton/My-PyGames?color=blue)](https://github.com/Wercton/My-PyGames) 
+[![GitHub stars](https://img.shields.io/github/stars/Wercton/My-PyGames?color=green)](https://github.com/Wercton/My-PyGames)
+
 Este é um repositório para os jogos que produzi usando a biblioteca do Python, `pygame`.
 
 - [Soco no Fascista](https://github.com/Wercton/My-PyGames/tree/master/punch-the-clown)
