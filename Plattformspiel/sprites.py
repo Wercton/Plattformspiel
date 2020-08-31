@@ -9,18 +9,16 @@ class Jogador(pg.sprite.Sprite):
 
         pg.sprite.Sprite.__init__(self)
         self.image = pg.transform.scale(pg.image.load(JOGADOR_SPRITE), TAMANHO_JOGADOR)
-        #self.pos = vec(POSICAO_INICIAL)
         # self.rect = pg.Rect(POSICAO_INICIAL, TAMANHO_JOGADOR)
-        # self.rect.center = POSICAO_INICIAL
         self.rect = self.image.get_rect()
         self.rect.center = (POSICAO_INICIAL)
-        self.pos = (POSICAO_INICIAL)
+        self.pos = vec(POSICAO_INICIAL)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
 
     def update(self):
 
-        self.acc = vec(0, 0.5)  # 0.5 gravidade
+        self.acc = vec(0, GRAVIDADE_JOGADOR)
         keys = pg.key.get_pressed()
 
         if keys[pg.K_LEFT]:
@@ -40,6 +38,11 @@ class Jogador(pg.sprite.Sprite):
             self.pos.x = WIDTH
 
         self.rect.midbottom = self.pos
+
+    def pular(self):
+        if not self.vel.y: # se 0, verdadeiro
+            self.vel.y = -15
+
 
 class Plataforma(pg.sprite.Sprite):
 

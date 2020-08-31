@@ -20,11 +20,13 @@ class Game:
         self.plataformas = pg.sprite.Group()
 
         self.jogador = Jogador()
-        p1 = Plataforma(0, HEIGHT - 25, WIDTH, 25)
-        p2 = Plataforma(WIDTH/3, HEIGHT - (HEIGHT/3), WIDTH/3, 25)
+        self.sprites_geral.add(self.jogador)
 
-        self.plataformas.add(p1, p2)
-        self.sprites_geral.add(self.jogador, p1, p2)
+        for pltfrms in PLATAFORMAS_LISTA:
+            p = Plataforma(*pltfrms)
+            self.plataformas.add(p)
+            self.sprites_geral.add(p)
+
         self.run()
 
     def run(self):
@@ -38,10 +40,11 @@ class Game:
 
     def update(self):
         self.sprites_geral.update()
-        hits = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
-        if hits:
-            self.jogador.pos.y = hits[0].rect.top + 1
-            self.jogador.vel.y = 0
+        if self.jogador.vel.y > -0.1: # colisão somente ao cair
+            hits = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
+            if hits:
+                self.jogador.pos.y = hits[0].rect.top + 1
+                self.jogador.vel.y = 0
 
 
     def eventos(self):
@@ -49,12 +52,15 @@ class Game:
         for event in pg.event.get():
             if event.type == pg.QUIT:
                 self.jogando = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_SPACE:
+                    self.jogador.pular()
+
 
     def draw(self):
 
         self.tela.fill(BLACK)
         self.sprites_geral.draw(self.tela)
-        # depois de desenhar tudo, flip o display ???
         pg.display.flip()
 
 
