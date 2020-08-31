@@ -17,5 +17,5 @@ FRICCAO_JOGADOR = -0.12
 
 # sprites - Jogador
 TAMANHO_JOGADOR = (50, 50)
-JOGADOR_SPRITE = "imagens/delta_roxo.png"
+JOGADOR_SPRITE = "./imagens/delta_roxo.png"
 POSICAO_INICIAL = (WIDTH / 2 - TAMANHO_JOGADOR[0] / 2, HEIGHT / 2 - TAMANHO_JOGADOR[1] / 2)

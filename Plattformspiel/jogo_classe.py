@@ -17,8 +17,14 @@ class Game:
     def novo(self):
         # começa um novo jogo
         self.sprites_geral = pg.sprite.Group()
+        self.plataformas = pg.sprite.Group()
+
         self.jogador = Jogador()
-        self.sprites_geral.add(self.jogador)
+        p1 = Plataforma(0, HEIGHT - 25, WIDTH, 25)
+        p2 = Plataforma(WIDTH/3, HEIGHT - (HEIGHT/3), WIDTH/3, 25)
+
+        self.plataformas.add(p1, p2)
+        self.sprites_geral.add(self.jogador, p1, p2)
         self.run()
 
     def run(self):
@@ -32,6 +38,11 @@ class Game:
 
     def update(self):
         self.sprites_geral.update()
+        hits = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
+        if hits:
+            self.jogador.pos.y = hits[0].rect.top + 1
+            self.jogador.vel.y = 0
+
 
     def eventos(self):
 
