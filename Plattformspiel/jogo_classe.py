@@ -1,5 +1,5 @@
 import pygame as pg
-import sys
+import random
 from configuracoes import *
 from sprites import *
 
@@ -45,6 +45,21 @@ class Game:
             if hits:
                 self.jogador.pos.y = hits[0].rect.top + 1
                 self.jogador.vel.y = 0
+        # subindo a tela
+        if self.jogador.rect.top <= HEIGHT / 4:
+            self.jogador.pos.y += abs(self.jogador.vel.y)
+            for pltfrms in self.plataformas:
+                pltfrms.rect.y += abs(self.jogador.vel.y) # usar -= no lugar de abs?
+                if pltfrms.rect.top >= HEIGHT:
+                    pltfrms.kill()
+        # gerar novas plataformas
+        while len(self.plataformas) < 5:
+            width = random.randrange(40, 85)
+            p = Plataforma(random.randrange(0, WIDTH - width),
+                        random.randrange(-80, -40), width, WIDTH_PLAT)
+            self.sprites_geral.add(p)
+            self.plataformas.add(p)
+
 
 
     def eventos(self):

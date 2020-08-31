@@ -41,7 +41,7 @@ class Jogador(pg.sprite.Sprite):
 
     def pular(self):
         if not self.vel.y: # se 0, verdadeiro
-            self.vel.y = -15
+            self.vel.y = -PULO_JOGADOR
 
 
 class Plataforma(pg.sprite.Sprite):
