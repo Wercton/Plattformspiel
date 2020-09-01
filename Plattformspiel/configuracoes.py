@@ -3,6 +3,7 @@ TITLE = 'Plattformspiel'
 WIDTH = 360
 HEIGHT = 480
 FPS = 30
+FONTE_TEXTO = 'ubuntumono' # freemono, arial, freeserif, ubuntumono
 
 # cores
 WHITE = (255, 255, 255)
@@ -10,6 +11,7 @@ BLACK = (0, 0, 0)
 RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
+YELLOW = (255, 255, 0)
 
 # propriedades do Jogador
 ACC_JOGADOR = 0.7
@@ -18,7 +20,7 @@ GRAVIDADE_JOGADOR = 0.8
 
 # sprites - Jogador
 TAMANHO_JOGADOR = (40, 40)
-JOGADOR_SPRITE = "./imagens/delta_roxo.png"
+JOGADOR_SPRITE = "./imagens/Pipipopo.png"
 POSICAO_INICIAL = (WIDTH/2 - TAMANHO_JOGADOR[0]/2, HEIGHT/2 - TAMANHO_JOGADOR[1]/2)
 PULO_JOGADOR = 15
 
