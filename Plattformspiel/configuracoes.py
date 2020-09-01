@@ -2,8 +2,10 @@
 TITLE = 'Plattformspiel'
 WIDTH = 360
 HEIGHT = 480
+CENTRO_WIDTH = WIDTH/2
 FPS = 30
 FONTE_TEXTO = 'ubuntumono' # freemono, arial, freeserif, ubuntumono
+RECORDE_FILE = '.recorde.txt'
 
 # cores
 WHITE = (255, 255, 255)
@@ -12,6 +14,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
+BG_COR = (0, 155, 155)
 
 # propriedades do Jogador
 ACC_JOGADOR = 0.7
