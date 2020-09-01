@@ -29,7 +29,7 @@ class Game:
         self.sprites_geral.add(self.jogador)
 
         for pltfrms in PLATAFORMAS_LISTA:
-            p = Plataforma(*pltfrms)
+            p = Plataforma(self, *pltfrms)
             self.plataformas.add(p)
             self.sprites_geral.add(p)
 
@@ -74,8 +74,8 @@ class Game:
             # gerar novas plataformas
             while len(self.plataformas) < 5:
                 width = random.randrange(40, 85)
-                p = Plataforma(random.randrange(0, WIDTH - width),
-                            random.randrange(-80, -40), width, WIDTH_PLAT)
+                p = Plataforma(self, random.randrange(0, WIDTH - width),
+                            random.randrange(-80, -40))
                 self.sprites_geral.add(p)
                 self.plataformas.add(p)
 

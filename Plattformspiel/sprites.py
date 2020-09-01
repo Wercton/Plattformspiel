@@ -112,10 +112,11 @@ class Jogador(pg.sprite.Sprite):
 
 class Plataforma(pg.sprite.Sprite):
 
-    def __init__(self, x, y, w, h):
+    def __init__(self, game, x, y):
         pg.sprite.Sprite.__init__(self)
-        self.image = pg.Surface((w, h))
-        self.image.fill(BLUE)
+        self.game = game
+        imagem = pg.image.load(PLATAFORMA_100)
+        self.image = imagem
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
