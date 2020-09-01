@@ -165,8 +165,12 @@ class Game:
     def carregar_dados(self):
 
         self.dir = path.dirname(__file__)
-        with open(path.join(self.dir, RECORDE_FILE), 'r+') as f:
-            try:
-                self.recorde = int(f.read())
-            except:
+        try:
+            with open(path.join(self.dir, RECORDE_FILE), 'r+') as f:
+                try:
+                    self.recorde = int(f.read())
+                except:
+                    self.recorde = 0
+        except:
+            with open(path.join(self.dir, RECORDE_FILE), 'w') as f:
                 self.recorde = 0
