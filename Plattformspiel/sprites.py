@@ -1,6 +1,7 @@
 # classes de sprite para o jogo
 import pygame as pg
 from configuracoes import *
+from random import choice
 vec = pg.math.Vector2
 
 class Jogador(pg.sprite.Sprite):
@@ -99,7 +100,7 @@ class Jogador(pg.sprite.Sprite):
                     self.frame_atual = (self.frame_atual + 1) % len(self.frame_andar_l) # BOOOOM
                     self.image = self.frame_andar_l[self.frame_atual]
         else:  # parado
-            if agora - self.ultima_mudanca > 500:
+            if agora - self.ultima_mudanca > 400:
                 if self.direita:
                     self.ultima_mudanca = agora
                     self.frame_atual = (self.frame_atual + 1) % len(self.frame_parado_r) # BOOOOM
@@ -112,11 +113,13 @@ class Jogador(pg.sprite.Sprite):
 
 class Plataforma(pg.sprite.Sprite):
 
-    def __init__(self, game, x, y):
+    def __init__(self, game, x, y, altura):
         pg.sprite.Sprite.__init__(self)
         self.game = game
-        imagem = pg.image.load(PLATAFORMA_100)
-        self.image = imagem
+        if altura < 300:
+            self.image = pg.image.load(choice(PLATAFORMA_FASE1))
+        else:
+            self.image = pg.image.load(choice(PLATAFORMA_FASE2))
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y

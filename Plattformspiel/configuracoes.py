@@ -14,7 +14,7 @@ RED = (255, 0, 0)
 GREEN = (0, 255, 0)
 BLUE = (0, 0, 255)
 YELLOW = (255, 255, 0)
-BG_COR = (0, 155, 155)
+BG_COR_SAVE = [0, 155, 155]
 
 # propriedades do Jogador
 ACC_JOGADOR = 0.7
@@ -23,7 +23,7 @@ GRAVIDADE_JOGADOR = 0.8
 
 # sprites - Jogador
 TAMANHO_JOGADOR = (40, 40)
-POSICAO_INICIAL = (WIDTH/2 - TAMANHO_JOGADOR[0]/2, HEIGHT/2 - TAMANHO_JOGADOR[1]/2)
+POSICAO_INICIAL = (TAMANHO_JOGADOR[0], HEIGHT - TAMANHO_JOGADOR[1]/2)
 PULO_JOGADOR = 15
 
 JOGADOR_SPRITE = "imagens/Pipipopo.png"
@@ -35,10 +35,16 @@ CAIR_SPRITE = "imagens/Pipipopo_cair.png"
 
 # plataformas
 WIDTH_PLAT = 15
-PLATAFORMAS_LISTA = [(-50, HEIGHT - WIDTH_PLAT),
-                    (WIDTH/3, HEIGHT - (HEIGHT/3)),
-                    (10, HEIGHT/2 - 30),
-                    (WIDTH - WIDTH/4, 100),
+PLATAFORMAS_LISTA = [(0, HEIGHT - WIDTH_PLAT),
+                    (WIDTH/3, HEIGHT - (HEIGHT/4)),
+                    (10, HEIGHT/2),
+                    (WIDTH/2, 120),
                     (WIDTH/3, 10)]
 
-PLATAFORMA_100 = "imagens/Plataforma_100.png"
+PLATAFORMA_FASE1 = ["imagens/Plataforma_100.png",
+                    "imagens/Plataforma_100_terra2.png",
+                    "imagens/Plataforma_100_terra3.png",
+                    "imagens/Plataforma_100_terra4.png",
+                    "imagens/Plataforma_70_terra5.png"]
+
+PLATAFORMA_FASE2 = ["imagens/Plataforma_80_fase2.png"]

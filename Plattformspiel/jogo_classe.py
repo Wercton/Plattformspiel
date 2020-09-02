@@ -15,6 +15,7 @@ class Game:
         self.clock = pg.time.Clock()
         self.jogando = True
         self.fonte_texto = pg.font.match_font(FONTE_TEXTO)
+        self.BG_COR = [0, 155, 155]
 
         self.carregar_dados()
 
@@ -29,7 +30,7 @@ class Game:
         self.sprites_geral.add(self.jogador)
 
         for pltfrms in PLATAFORMAS_LISTA:
-            p = Plataforma(self, *pltfrms)
+            p = Plataforma(self, *pltfrms, self.pontos)
             self.plataformas.add(p)
             self.sprites_geral.add(p)
 
@@ -52,8 +53,13 @@ class Game:
         if self.jogador.vel.y > -0.1: # colisão somente ao cair
             hits = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
             if hits:
-                self.jogador.pos.y = hits[0].rect.top + 1
-                self.jogador.vel.y = 0
+                mais_baixo = hits[0]
+                for hit in hits:  # solução temporária - retirar após colocar para identificar a plataforma mais alta
+                    if hit.rect.bottom < mais_baixo.rect.bottom:
+                        mais_baixo = hit
+                if self.jogador.pos.y - 7 <= mais_baixo.rect.bottom:  # corrigindo bug de transportar para o topo sem alcançar
+                    self.jogador.pos.y = mais_baixo.rect.top + 1
+                    self.jogador.vel.y = 0
         # game over?
         if self.jogador.rect.top > HEIGHT:
             for sprite in self.sprites_geral:
@@ -71,11 +77,14 @@ class Game:
                     if pltfrms.rect.top >= HEIGHT:
                         pltfrms.kill()
                         self.pontos += 10
+                        if self.BG_COR[1] > 5:
+                            self.BG_COR[1] -= 1
+                            self.BG_COR[2] -= 1
             # gerar novas plataformas
             while len(self.plataformas) < 5:
                 width = random.randrange(40, 85)
                 p = Plataforma(self, random.randrange(0, WIDTH - width),
-                            random.randrange(-80, -40))
+                            random.randrange(-50, -20), self.pontos)
                 self.sprites_geral.add(p)
                 self.plataformas.add(p)
 
@@ -93,8 +102,9 @@ class Game:
 
     def draw(self):
 
-        self.tela.fill(BG_COR)
+        self.tela.fill(self.BG_COR)
         self.sprites_geral.draw(self.tela)
+        self.tela.blit(self.jogador.image, self.jogador.rect)  # colocando jogador na frente
         self.draw_texto(str(self.pontos), 20, YELLOW, CENTRO_WIDTH, 10)
 
         pg.display.flip()
@@ -113,7 +123,7 @@ class Game:
 
         recorde_texto = "Recorde: " + str(self.recorde)
 
-        self.tela.fill(BG_COR)
+        self.tela.fill(self.BG_COR)
         self.draw_texto(recorde_texto, 20, WHITE, CENTRO_WIDTH, 10)
         self.draw_texto(TITLE, 40, YELLOW, CENTRO_WIDTH, HEIGHT/4)
         self.draw_texto('Ajude o jovem Pipipopo a alcançar', 20, BLACK, CENTRO_WIDTH, HEIGHT/2)
@@ -127,7 +137,8 @@ class Game:
 
     def tela_saida(self):
 
-        self.tela.fill(BG_COR)
+        self.BG_COR = BG_COR_SAVE
+        self.tela.fill(self.BG_COR)
 
         if self.recorde < self.pontos:
             self.recorde = self.pontos
