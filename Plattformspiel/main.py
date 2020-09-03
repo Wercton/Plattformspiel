@@ -9,7 +9,7 @@ def gaming():
     while game.jogando:
         game.novo()
         game.tela_saida()
-
+   
 
 if __name__ == '__main__':
 

@@ -49,4 +49,18 @@ PLATAFORMA_FASE1 = ["imagens/Plataforma_100.png",
 
 PLATAFORMA_FASE2 = ["imagens/Plataforma_80_fase2.png",
                     "imagens/Plataforma_80_fase2_2.png",
-                    "imagens/Plataforma_60_fase2_3.png"]
+                    "imagens/Plataforma_60_fase2_3.png",
+                    "imagens/Plataforma_60_fase2_4.png",
+                    "imagens/Plataforma_70_fase2_5.png"]
+
+PLATAFORMA_FASE3 = ["imagens/Plataforma_60_fase3_1.png",
+                    "imagens/Plataforma_40_fase3_3.png",
+                    "imagens/Plataforma_60_fase3_4.png",
+                    "imagens/Plataforma_60_fase3_5.png"]
+
+PLATAFORMA_RARA = "imagens/Plataforma_60_fase3_2.png"
+
+# audio
+main_track = 'loneliness.ogg'
+jump_sound_dir = 'cute_jump.ogg'
+game_over_audio = 'game_over_audio.ogg'

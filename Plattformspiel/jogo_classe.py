@@ -25,6 +25,7 @@ class Game:
         self.sprites_geral = pg.sprite.Group()
         self.plataformas = pg.sprite.Group()
         self.pontos = 0
+        self.fase = 1
 
         self.jogador = Jogador()
         self.sprites_geral.add(self.jogador)
@@ -57,7 +58,7 @@ class Game:
                 for hit in hits:  # solução temporária - retirar após colocar para identificar a plataforma mais alta
                     if hit.rect.bottom < mais_baixo.rect.bottom:
                         mais_baixo = hit
-                if self.jogador.pos.y - 7 <= mais_baixo.rect.bottom:  # corrigindo bug de transportar para o topo sem alcançar
+                if self.jogador.pos.y - 5 <= mais_baixo.rect.bottom - 2:  # corrigindo bug de transportar para o topo sem alcançar
                     self.jogador.pos.y = mais_baixo.rect.top + 1
                     self.jogador.vel.y = 0
                     self.jogador.pulando = False
@@ -81,11 +82,23 @@ class Game:
                         if self.BG_COR[1] > 5:
                             self.BG_COR[1] -= 1
                             self.BG_COR[2] -= 1
+
             # gerar novas plataformas
+            mais_alto = HEIGHT
+            for pltfrms in self.plataformas:
+                if mais_alto > pltfrms.rect.top:
+                    mais_alto = pltfrms.rect.top
+
+            # pegar fase
+            if self.pontos == 700:
+                self.fase = 3
+            elif self.pontos == 300:
+                self.fase = 2
+
             while len(self.plataformas) < 5:
                 width = random.randrange(40, 85)
                 p = Plataforma(self, random.randrange(0, WIDTH - width),
-                            random.randrange(-50, -20), self.pontos)
+                            random.randrange(mais_alto - HEIGHT//2.8, mais_alto - HEIGHT//5.5), self.fase)
                 self.sprites_geral.add(p)
                 self.plataformas.add(p)
 
@@ -99,6 +112,8 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.jogador.pular()
+                    if self.jogador.pulando:
+                        self.audio_pulo.play()
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_SPACE:
                     self.jogador.interromper_pulo()
@@ -127,6 +142,7 @@ class Game:
 
         recorde_texto = "Recorde: " + str(self.recorde)
 
+        self.soundtrack.play(-1)
         self.tela.fill(self.BG_COR)
         self.draw_texto(recorde_texto, 20, WHITE, CENTRO_WIDTH, 10)
         self.draw_texto(TITLE, 40, YELLOW, CENTRO_WIDTH, HEIGHT/4)
@@ -141,6 +157,8 @@ class Game:
 
     def tela_saida(self):
 
+        self.soundtrack.fadeout(1000)
+        self.audio_gameover.play(-1)
         self.BG_COR = [0, 155, 155]
         self.tela.fill(self.BG_COR)
 
@@ -153,7 +171,7 @@ class Game:
         else:
             texto_pontucao = 'Pontuação: ' + str(self.pontos)
             texto_recorde = "Recorde: " + str(self.recorde)
-            self.draw_texto(texto_pontucao, 40, WHITE, CENTRO_WIDTH, HEIGHT/4)
+            self.draw_texto(texto_pontucao, 30, WHITE, CENTRO_WIDTH, HEIGHT/4)
             self.draw_texto(texto_recorde, 20, WHITE, CENTRO_WIDTH, HEIGHT/4 + 45)
 
         self.draw_texto('Não foi dessa vez! :(', 20, BLACK, CENTRO_WIDTH, HEIGHT/2 - 20)
@@ -164,6 +182,9 @@ class Game:
         pg.display.flip()
 
         self.esperando_comando()
+
+        self.audio_gameover.fadeout(500)
+        self.soundtrack.play(-1)
 
 
     def esperando_comando(self):
@@ -189,3 +210,12 @@ class Game:
         except:
             with open(path.join(self.dir, RECORDE_FILE), 'w') as f:
                 self.recorde = 0
+
+        # música
+        self.sound_dir = path.join(self.dir, 'audio')
+        self.soundtrack = pg.mixer.Sound(path.join(self.sound_dir, main_track))
+        self.soundtrack.set_volume(0.15)
+        self.audio_pulo = pg.mixer.Sound(path.join(self.sound_dir, jump_sound_dir))
+        self.audio_pulo.set_volume(0.04)
+        self.audio_gameover = pg.mixer.Sound(path.join(self.sound_dir, game_over_audio))
+        self.audio_gameover.set_volume(0.1)
