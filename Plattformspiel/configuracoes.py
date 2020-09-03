@@ -24,7 +24,7 @@ GRAVIDADE_JOGADOR = 0.8
 # sprites - Jogador
 TAMANHO_JOGADOR = (40, 40)
 POSICAO_INICIAL = (TAMANHO_JOGADOR[0], HEIGHT - TAMANHO_JOGADOR[1]/2)
-PULO_JOGADOR = 15
+PULO_JOGADOR = 17
 
 JOGADOR_SPRITE = "imagens/Pipipopo.png"
 JOGADOR_SPRITE2 = "imagens/Pipipopo2.png"
@@ -47,4 +47,6 @@ PLATAFORMA_FASE1 = ["imagens/Plataforma_100.png",
                     "imagens/Plataforma_100_terra4.png",
                     "imagens/Plataforma_70_terra5.png"]
 
-PLATAFORMA_FASE2 = ["imagens/Plataforma_80_fase2.png"]
+PLATAFORMA_FASE2 = ["imagens/Plataforma_80_fase2.png",
+                    "imagens/Plataforma_80_fase2_2.png",
+                    "imagens/Plataforma_60_fase2_3.png"]

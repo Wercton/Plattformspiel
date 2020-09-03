@@ -15,6 +15,7 @@ class Jogador(pg.sprite.Sprite):
         self.pos = vec(POSICAO_INICIAL)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
+        self.pulando = False
 
         self.andando = False
         self.frame_atual = 0
@@ -53,7 +54,14 @@ class Jogador(pg.sprite.Sprite):
     def pular(self):
 
         if not self.vel.y: # se 0, verdadeiro
+            self.pulando = True
             self.vel.y = -PULO_JOGADOR
+
+    def interromper_pulo(self):
+
+        if self.pulando:
+            if self.vel.y < -3:
+                self.vel.y = -3
 
     def carregar_imagens(self):
 

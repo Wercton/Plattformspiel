@@ -60,6 +60,7 @@ class Game:
                 if self.jogador.pos.y - 7 <= mais_baixo.rect.bottom:  # corrigindo bug de transportar para o topo sem alcançar
                     self.jogador.pos.y = mais_baixo.rect.top + 1
                     self.jogador.vel.y = 0
+                    self.jogador.pulando = False
         # game over?
         if self.jogador.rect.top > HEIGHT:
             for sprite in self.sprites_geral:
@@ -98,6 +99,9 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.jogador.pular()
+            elif event.type == pg.KEYUP:
+                if event.key == pg.K_SPACE:
+                    self.jogador.interromper_pulo()
 
 
     def draw(self):
@@ -137,7 +141,7 @@ class Game:
 
     def tela_saida(self):
 
-        self.BG_COR = BG_COR_SAVE
+        self.BG_COR = [0, 155, 155]
         self.tela.fill(self.BG_COR)
 
         if self.recorde < self.pontos:
