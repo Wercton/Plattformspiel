@@ -6,7 +6,7 @@ vec = pg.math.Vector2
 
 class Jogador(pg.sprite.Sprite):
 
-    def __init__(self):
+    def __init__(self, game):
 
         pg.sprite.Sprite.__init__(self)
         self.image = pg.transform.scale(pg.image.load(JOGADOR_SPRITE), TAMANHO_JOGADOR)
@@ -16,6 +16,7 @@ class Jogador(pg.sprite.Sprite):
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.pulando = False
+        self.game = game
 
         self.andando = False
         self.frame_atual = 0
@@ -44,10 +45,12 @@ class Jogador(pg.sprite.Sprite):
             self.vel.x = 0
         self.pos += self.vel + ACC_JOGADOR * self.acc
         # dando a volta na tela
-        if self.pos.x > WIDTH + TAMANHO_JOGADOR[1] / 2:
-            self.pos.x = 0 - TAMANHO_JOGADOR[1] / 2
-        elif self.pos.x < 0 - TAMANHO_JOGADOR[1] / 2:
-            self.pos.x = WIDTH
+        hits = pg.sprite.spritecollide(self, self.game.plataformas, False)
+        if len(hits) == 0:
+            if self.pos.x > WIDTH + TAMANHO_JOGADOR[1] / 2:
+                self.pos.x = 0 - TAMANHO_JOGADOR[1] / 2
+            elif self.pos.x < 0 - TAMANHO_JOGADOR[1] / 2:
+                self.pos.x = WIDTH
 
         self.rect.midbottom = self.pos
 
