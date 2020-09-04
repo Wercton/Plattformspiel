@@ -21,6 +21,10 @@ ACC_JOGADOR = 0.7
 FRICCAO_JOGADOR = -0.12
 GRAVIDADE_JOGADOR = 0.8
 
+# propriedades do jogo
+IMPULSO_POTENCIA = 30
+FREQUENCIA_PODER = 5
+
 # sprites - Jogador
 TAMANHO_JOGADOR = (40, 40)
 POSICAO_INICIAL = (TAMANHO_JOGADOR[0], HEIGHT - TAMANHO_JOGADOR[1]/2)
@@ -58,9 +62,19 @@ PLATAFORMA_FASE3 = ["imagens/Plataforma_60_fase3_1.png",
                     "imagens/Plataforma_60_fase3_4.png",
                     "imagens/Plataforma_60_fase3_5.png"]
 
+PLATAFORMA_FASE4 = ["imagens/Plataforma_45_fase4.png",
+                    "imagens/Plataforma_30_fase4_2.png"]
+
 PLATAFORMA_RARA = "imagens/Plataforma_60_fase3_2.png"
+
+# outros sprites
+FOGUETÃO = "imagens/coin.png"
+ROSA = "imagens/rosa2.png"
+
 
 # audio
 main_track = 'loneliness.ogg'
 jump_sound_dir = 'cute_jump.ogg'
 game_over_audio = 'game_over_audio.ogg'
+coin_sound = 'coin01.ogg'
+impulso_audio = 'jump01.ogg'

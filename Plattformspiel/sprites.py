@@ -7,8 +7,8 @@ vec = pg.math.Vector2
 class Jogador(pg.sprite.Sprite):
 
     def __init__(self, game):
-
-        pg.sprite.Sprite.__init__(self)
+        self.grupos = game.sprites_geral
+        pg.sprite.Sprite.__init__(self, self.grupos)
         self.image = pg.transform.scale(pg.image.load(JOGADOR_SPRITE), TAMANHO_JOGADOR)
         self.rect = self.image.get_rect()
         self.rect.center = (POSICAO_INICIAL)
@@ -57,6 +57,7 @@ class Jogador(pg.sprite.Sprite):
     def pular(self):
 
         if not self.vel.y: # se 0, verdadeiro
+            self.game.audio_pulo.play()
             self.pulando = True
             self.vel.y = -PULO_JOGADOR
 
@@ -125,9 +126,12 @@ class Jogador(pg.sprite.Sprite):
 class Plataforma(pg.sprite.Sprite):
 
     def __init__(self, game, x, y, fase):
-        pg.sprite.Sprite.__init__(self)
+        self.grupos = game.sprites_geral, game.plataformas
+        pg.sprite.Sprite.__init__(self, self.grupos)
         self.game = game
-        if fase == 3:
+        if fase == 4:
+            self.image = pg.image.load(random.choice(PLATAFORMA_FASE4))
+        elif fase == 3:
             if random.random() < 0.05:
                 self.image = pg.image.load(PLATAFORMA_RARA)
             else:
@@ -139,3 +143,26 @@ class Plataforma(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
+        if self.game.pontos >= 10:
+            if random.randrange(100) < FREQUENCIA_PODER:
+                Poder(self.game, self)
+
+
+class Poder(pg.sprite.Sprite):
+
+    def __init__(self, game, plat):
+        self.grupos = game.sprites_geral, game.poderes
+        pg.sprite.Sprite.__init__(self, self.grupos)
+        self.game = game
+        self.plat = plat
+        self.tipo = random.choice(['impulso'])
+        self.image = pg.image.load(FOGUETÃO)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = self.plat.rect.centerx
+        self.rect.bottom = self.plat.rect.top
+
+    def update(self):
+        self.rect.bottom = self.plat.rect.top - 2
+        self.rect.centerx = self.plat.rect.centerx
+        if not self.game.plataformas.has(self.plat):
+            self.kill()

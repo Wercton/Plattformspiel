@@ -26,16 +26,14 @@ class Game:
         self.plataformas = pg.sprite.Group()
         self.plataformas_movendo_direita = pg.sprite.Group()
         self.plataformas_movendo_esquerda = pg.sprite.Group()
+        self.poderes = pg.sprite.Group()
         self.pontos = 0
         self.fase = 1
 
         self.jogador = Jogador(self)
-        self.sprites_geral.add(self.jogador)
 
         for pltfrms in PLATAFORMAS_LISTA:
             p = Plataforma(self, *pltfrms, self.pontos)
-            self.plataformas.add(p)
-            self.sprites_geral.add(p)
 
         self.run()
 
@@ -54,30 +52,9 @@ class Game:
 
         self.sprites_geral.update()
 
-        hits = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
-        for hit in hits:
-            if self.jogador.vel.y > -0.1:
-                if self.jogador.pos.x < hit.rect.right + 15 and \
-                self.jogador.rect.x > hit.rect.left - 35:  # cai quando as duas perninhas dele sai da plataforma
-                    if self.jogador.pos.y - 5 <= hit.rect.bottom - 2:  # corrigindo bug de transportar para o topo sem alcançar
-                        self.jogador.pos.y = hit.rect.top + 1
-                        self.jogador.vel.y = 0
-                        self.jogador.pulando = False
-                # se move junto com a plataforma
-                if hit in self.plataformas_movendo_direita:
-                    self.jogador.pos.x += 2
-                elif hit in self.plataformas_movendo_esquerda:
-                    self.jogador.pos.x -= 2
+        self.verificar_colisoes()
 
-        # game over?
-        if self.jogador.rect.top > HEIGHT:
-            for sprite in self.sprites_geral:
-                sprite.rect.y -= self.jogador.vel.y # limitar velocidade com max (..., 10)?
-                if sprite.rect.bottom < 0:
-                    sprite.kill()
-            if not len(self.plataformas): # só quando some todas plataformas, novo jogo se inicia
-                self.partida = False
-        else:
+        if not self.game_over():
             # subindo a tela
             if self.jogador.rect.top <= HEIGHT / 4:
                 self.jogador.pos.y += abs(self.jogador.vel.y)
@@ -110,17 +87,16 @@ class Game:
             if not self.pontos % 100:
                 self.definir_fase_e_distancia_plataforma()
 
+            # produzindo novas plataformas
             while len(self.plataformas) < 5:
                 p = Plataforma(self, random.randrange(0, WIDTH - 50),
                             random.randrange(self.mais_alto, self.mais_baixo), self.fase)
-                if self.fase >= 3:
+                if self.fase == 3:
                     r = random.random()
                     if r < 0.3:
                         self.plataformas_movendo_direita.add(p)
                     elif r < 0.6:
                         self.plataformas_movendo_esquerda.add(p)
-                self.sprites_geral.add(p)
-                self.plataformas.add(p)
 
 
     def eventos(self):
@@ -132,8 +108,6 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.jogador.pular()
-                    if self.jogador.pulando:
-                        self.audio_pulo.play()
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_SPACE:
                     self.jogador.interromper_pulo()
@@ -143,6 +117,7 @@ class Game:
 
         self.tela.fill(self.BG_COR)
         self.sprites_geral.draw(self.tela)
+        self.plataformas.draw(self.tela)
         self.tela.blit(self.jogador.image, self.jogador.rect)  # colocando jogador na frente
         self.draw_texto(str(self.pontos), 20, YELLOW, CENTRO_WIDTH, 10)
 
@@ -218,8 +193,48 @@ class Game:
                     esperar = False
 
 
-    def definir_fase_e_distancia_plataforma(self):
+    def verificar_colisoes(self):
 
+        # plataforma
+        hits = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
+        for hit in hits:
+            if self.jogador.vel.y > -0.1:
+                if self.jogador.pos.x < hit.rect.right + 15 and \
+                self.jogador.rect.x > hit.rect.left - 35:  # cai quando as duas perninhas dele sai da plataforma
+                    if self.jogador.pos.y - 5 <= hit.rect.bottom - 2:  # corrigindo bug de transportar para o topo sem alcançar
+                        self.jogador.pos.y = hit.rect.top + 1
+                        self.jogador.vel.y = 0
+                        self.jogador.pulando = False
+                # se move junto com a plataforma
+                if hit in self.plataformas_movendo_direita:
+                    self.jogador.pos.x += 2
+                elif hit in self.plataformas_movendo_esquerda:
+                    self.jogador.pos.x -= 2
+
+        # poderes
+        hits = pg.sprite.spritecollide(self.jogador, self.poderes, True)
+        for hit in hits:
+            if hit.tipo == 'impulso':
+                self.audio_moeda.play()
+                self.jogador.vel.y = -IMPULSO_POTENCIA
+                self.jogador.pulando = False
+
+
+    def game_over(self):
+
+        if self.jogador.rect.top > HEIGHT:
+            for sprite in self.sprites_geral:
+                sprite.rect.y -= self.jogador.vel.y # limitar velocidade com max (..., 10)?
+                if sprite.rect.bottom < 0:
+                    sprite.kill()
+            if not len(self.plataformas): # só quando some todas plataformas, novo jogo se inicia
+                self.partida = False
+                return True
+        else:
+            return False
+
+
+    def definir_fase_e_distancia_plataforma(self):
         # gerar novas plataformas
         mais_alto = HEIGHT
         for pltfrms in self.plataformas:
@@ -227,11 +242,11 @@ class Game:
                 mais_alto = pltfrms.rect.top
 
         # pegar fase e distância
-        if self.pontos == 800:
+        if self.pontos == 700:
             self.fase = 3
-            self.mais_alto = mais_alto - HEIGHT//2.8
-            self.mais_baixo = mais_alto - HEIGHT//2.81 #3.2
-        if self.pontos == 500:
+            self.mais_alto = mais_alto - HEIGHT//2.9
+            self.mais_baixo = mais_alto - HEIGHT//3.1 #3.2
+        elif self.pontos == 500:
             self.fase = 3
             self.mais_alto = mais_alto - HEIGHT//3.2
             self.mais_baixo = mais_alto - HEIGHT//3.7
@@ -265,3 +280,5 @@ class Game:
         self.audio_pulo.set_volume(0.04) #0.04
         self.audio_gameover = pg.mixer.Sound(path.join(self.sound_dir, game_over_audio))
         self.audio_gameover.set_volume(0.1) #0.1
+        self.audio_moeda = pg.mixer.Sound(path.join(self.sound_dir, coin_sound))
+        self.audio_moeda.set_volume(0.2)
