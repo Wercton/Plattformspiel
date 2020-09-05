@@ -8,8 +8,8 @@ def gaming():
     game.tela_inicial()
     while game.jogando:
         game.novo()
-        game.tela_saida()
-   
+        game.tela_saida()        
+
 
 if __name__ == '__main__':
 

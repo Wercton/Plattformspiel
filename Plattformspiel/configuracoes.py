@@ -67,14 +67,19 @@ PLATAFORMA_FASE4 = ["imagens/Plataforma_45_fase4.png",
 
 PLATAFORMA_RARA = "imagens/Plataforma_60_fase3_2.png"
 
+ASTEROIDES = ["imagens/Plataforma_50_asteroide.png",
+            "imagens/Plataforma_50_asteroide_2.png",
+            "imagens/Plataforma_50_asteroide_3.png"]
+
 # outros sprites
 FOGUETÃO = "imagens/coin.png"
 ROSA = "imagens/rosa2.png"
 
-
 # audio
-main_track = 'loneliness.ogg'
-jump_sound_dir = 'cute_jump.ogg'
-game_over_audio = 'game_over_audio.ogg'
-coin_sound = 'coin01.ogg'
-impulso_audio = 'jump01.ogg'
+MAIN_TRACK = 'loneliness.ogg'
+MAIN_TRACK_FINAL = 'was_it_all_for_nothing.ogg'
+MAIN_TRACK_SUSPENSE = "there_is_something_wrong.ogg"
+PULO_AUDIO = 'cute_jump.ogg'
+GAME_OVER_AUDIO = 'game_over_audio.ogg'
+COIN_AUDIO = 'coin01.ogg'
+IMPULSO_AUDIO = 'jump01.ogg'

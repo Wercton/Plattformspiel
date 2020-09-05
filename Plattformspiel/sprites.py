@@ -15,6 +15,7 @@ class Jogador(pg.sprite.Sprite):
         self.pos = vec(POSICAO_INICIAL)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
+        self.gravidade = GRAVIDADE_JOGADOR
         self.pulando = False
         self.game = game
 
@@ -27,7 +28,7 @@ class Jogador(pg.sprite.Sprite):
     def update(self):
 
         self.animar()
-        self.acc = vec(0, GRAVIDADE_JOGADOR)
+        self.acc = vec(0, self.gravidade)
         keys = pg.key.get_pressed()
 
         if keys[pg.K_LEFT]:
@@ -130,7 +131,7 @@ class Plataforma(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.grupos)
         self.game = game
         if fase == 4:
-            self.image = pg.image.load(random.choice(PLATAFORMA_FASE4))
+            self.image = pg.image.load(random.choice(ASTEROIDES))
         elif fase == 3:
             if random.random() < 0.05:
                 self.image = pg.image.load(PLATAFORMA_RARA)

@@ -29,6 +29,8 @@ class Game:
         self.poderes = pg.sprite.Group()
         self.pontos = 0
         self.fase = 1
+        self.velocidade_plat = 0
+        self.prob_plat_movimento = 0
 
         self.jogador = Jogador(self)
 
@@ -63,40 +65,31 @@ class Game:
                     if pltfrms.rect.top >= HEIGHT:
                         pltfrms.kill()
                         self.pontos += 10
-                        if self.BG_COR[1] > 6:
-                            self.BG_COR[1] -= 1
-                            self.BG_COR[2] -= 1
+                        if self.BG_COR[1] > 3:
+                            self.BG_COR[1] -= 1.5
+                            self.BG_COR[2] -= 1.5
 
             # PLATAFORMAS SE MOVENDO
             for plat in self.plataformas_movendo_direita:
-                plat.rect.right += 2
+                plat.rect.right += self.velocidade_plat
                 if plat.rect.left > WIDTH:
                     plat.rect.right = 0
                     if plat.rect.colliderect(self.jogador.rect):  # por que nunca entra?
                         print('hm')
-                        self.jogador.pos.x = plat.rect.left + posicao_jogador_plataforma
+                        self.jogador.pos.x = plat.rect.left + posicao_jogador_plataforma #ENTROOOOOU MAS DEU ERRO, ESTAVA CAINDO
                 else:
                     posicao_jogador_plataforma = plat.rect.left - self.jogador.pos.x
 
             for plat in self.plataformas_movendo_esquerda:
-                plat.rect.left -= 2
+                plat.rect.left -= self.velocidade_plat
                 if plat.rect.left < plat.rect.size[0] * -1:
                     plat.rect.right = WIDTH + plat.rect.size[0]
 
 
             if not self.pontos % 100:
-                self.definir_fase_e_distancia_plataforma()
+                self.configurar_fases()
 
-            # produzindo novas plataformas
-            while len(self.plataformas) < 5:
-                p = Plataforma(self, random.randrange(0, WIDTH - 50),
-                            random.randrange(self.mais_alto, self.mais_baixo), self.fase)
-                if self.fase == 3:
-                    r = random.random()
-                    if r < 0.3:
-                        self.plataformas_movendo_direita.add(p)
-                    elif r < 0.6:
-                        self.plataformas_movendo_esquerda.add(p)
+            self.spawnar_plataformas()
 
 
     def eventos(self):
@@ -152,7 +145,7 @@ class Game:
 
     def tela_saida(self):
 
-        self.soundtrack.fadeout(1000)
+        pg.mixer.fadeout(1000)
         self.audio_gameover.play(-1)
         self.BG_COR = [0, 155, 155]
         self.tela.fill(self.BG_COR)
@@ -207,9 +200,9 @@ class Game:
                         self.jogador.pulando = False
                 # se move junto com a plataforma
                 if hit in self.plataformas_movendo_direita:
-                    self.jogador.pos.x += 2
+                    self.jogador.pos.x += self.velocidade_plat
                 elif hit in self.plataformas_movendo_esquerda:
-                    self.jogador.pos.x -= 2
+                    self.jogador.pos.x -= self.velocidade_plat
 
         # poderes
         hits = pg.sprite.spritecollide(self.jogador, self.poderes, True)
@@ -234,29 +227,53 @@ class Game:
             return False
 
 
-    def definir_fase_e_distancia_plataforma(self):
-        # gerar novas plataformas
-        mais_alto = HEIGHT
-        for pltfrms in self.plataformas:
-            if mais_alto > pltfrms.rect.top:
-                mais_alto = pltfrms.rect.top
-
-        # pegar fase e distância
-        if self.pontos == 700:
-            self.fase = 3
-            self.mais_alto = mais_alto - HEIGHT//2.9
-            self.mais_baixo = mais_alto - HEIGHT//3.1 #3.2
+    def configurar_fases(self):
+        if self.pontos == 800:
+            self.fase = 4
+            self.velocidade_plat = 3
+            self.soundtrack.fadeout(3000)
+            self.soundtrack_final.play(-1)
+            self.jogador.gravidade = 0.6
+            self.prob_plat_movimento = 0.5
         elif self.pontos == 500:
             self.fase = 3
-            self.mais_alto = mais_alto - HEIGHT//3.2
-            self.mais_baixo = mais_alto - HEIGHT//3.7
+            self.velocidade_plat = 2
+            self.prob_plat_movimento = 0.3
         elif self.pontos == 200:
             self.fase = 2
-            self.mais_alto = mais_alto - HEIGHT//4
-            self.mais_baixo = mais_alto - HEIGHT//4.5
-        elif self.pontos == 0:
-            self.mais_alto = mais_alto - HEIGHT//5
-            self.mais_baixo = mais_alto - HEIGHT//5.5
+            self.velocidade_plat = 0
+
+
+    def spawnar_plataformas(self):
+
+        while len(self.plataformas) < 5:
+
+            mais_alto = HEIGHT
+            for pltfrms in self.plataformas:
+                if mais_alto > pltfrms.rect.top:
+                    mais_alto = pltfrms.rect.top
+
+            if self.fase == 1:
+                self.mais_alto = mais_alto - HEIGHT//4.1
+                self.mais_baixo = mais_alto - HEIGHT//4.5
+            elif self.fase == 2:
+                self.mais_alto = mais_alto - HEIGHT//3.2
+                self.mais_baixo = mais_alto - HEIGHT//3.9
+            elif self.fase == 3:
+                self.mais_alto = mais_alto - HEIGHT//2.8
+                self.mais_baixo = mais_alto - HEIGHT//3.1
+            elif self.fase == 4:
+                self.mais_alto = mais_alto - HEIGHT//2.2
+                self.mais_baixo = mais_alto - HEIGHT//2.6
+
+            p = Plataforma(self, random.randrange(0, WIDTH - 50),
+                        random.randrange(self.mais_alto, self.mais_baixo), self.fase)
+            if self.fase >= 3:
+                r = random.random()
+                if r < self.prob_plat_movimento:
+                    self.plataformas_movendo_direita.add(p)
+                elif r < self.prob_plat_movimento * 2:
+                    self.plataformas_movendo_esquerda.add(p)
 
 
     def carregar_dados(self):
@@ -274,11 +291,20 @@ class Game:
 
         # música
         self.sound_dir = path.join(self.dir, 'audio')
-        self.soundtrack = pg.mixer.Sound(path.join(self.sound_dir, main_track))
+        self.soundtrack = pg.mixer.Sound(path.join(self.sound_dir, MAIN_TRACK))
         self.soundtrack.set_volume(0.15) #0.15
-        self.audio_pulo = pg.mixer.Sound(path.join(self.sound_dir, jump_sound_dir))
+
+        #self.soundtrack_suspense = pg.mixer.Sound(path.join(self.sound_dir, MAIN_TRACK_SUSPENSE))
+        #self.soundtrack_suspense.set_volume(0.05) #0.15
+
+        self.soundtrack_final = pg.mixer.Sound(path.join(self.sound_dir, MAIN_TRACK_FINAL))
+        self.soundtrack_final.set_volume(0.05) #0.15
+
+        self.audio_pulo = pg.mixer.Sound(path.join(self.sound_dir, PULO_AUDIO))
         self.audio_pulo.set_volume(0.04) #0.04
-        self.audio_gameover = pg.mixer.Sound(path.join(self.sound_dir, game_over_audio))
+
+        self.audio_gameover = pg.mixer.Sound(path.join(self.sound_dir, GAME_OVER_AUDIO))
         self.audio_gameover.set_volume(0.1) #0.1
-        self.audio_moeda = pg.mixer.Sound(path.join(self.sound_dir, coin_sound))
+
+        self.audio_moeda = pg.mixer.Sound(path.join(self.sound_dir, COIN_AUDIO))
         self.audio_moeda.set_volume(0.2)
