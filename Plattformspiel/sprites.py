@@ -217,3 +217,52 @@ class Mob(pg.sprite.Sprite):
         self.rect.y += self.vely
         if self.rect.left > WIDTH + 100 or self.rect.right < -100:
             self.kill()
+
+
+class Botao(pg.sprite.Sprite):
+
+    def __init__(self, game, y, texto, selecionado=False):
+        
+        pg.sprite.Sprite.__init__(self)
+        self.game = game
+        self.texto = texto
+        self.selecionado = selecionado
+
+        if self.selecionado:
+            self.image = pg.image.load(BOTAO_SELECIONADO)
+        else:
+            self.image = pg.image.load(BOTAO)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = CENTRO_WIDTH
+        self.rect.y = y
+
+        self.game.tela.blit(self.image, self.rect)
+        self.game.draw_texto(self.texto, 30, BLACK, self.rect.centerx, self.rect.centery - 15)
+
+
+    def update(self):
+
+            self.game.tela.blit(self.image, self.rect)
+            self.game.draw_texto(self.texto, 30, BLACK, self.rect.centerx, self.rect.centery - 15)
+
+    def selecionar(self):
+
+        self.selecionado = True
+        centro = self.rect.centerx
+        y = self.rect.y
+
+        self.image = pg.image.load(BOTAO_SELECIONADO)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = centro
+        self.rect.y = y
+
+    def deselecionar(self):
+
+        self.selecionado = False
+        centro = self.rect.centerx
+        y = self.rect.y
+
+        self.image = pg.image.load(BOTAO)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = centro
+        self.rect.y = y

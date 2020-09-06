@@ -87,6 +87,8 @@ OLHO_CTHULHU = "imagens/olho_de_cthulhu_down.png"
 OLHO_CTHULHU_RETO = "imagens/olho_de_cthulhu_reto.png"
 NYAH1 = "imagens/nyah.png"
 NYAH2 = "imagens/nyah2.png"
+BOTAO = "imagens/botao.png"
+BOTAO_SELECIONADO = "imagens/botao_selecionado.png"
 
 # audio
 MAIN_TRACK = 'loneliness.ogg'
