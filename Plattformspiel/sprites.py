@@ -7,6 +7,7 @@ vec = pg.math.Vector2
 class Jogador(pg.sprite.Sprite):
 
     def __init__(self, game):
+        self._layer = LAYER_JOGADOR
         self.grupos = game.sprites_geral
         pg.sprite.Sprite.__init__(self, self.grupos)
         self.image = pg.transform.scale(pg.image.load(JOGADOR_SPRITE), TAMANHO_JOGADOR)
@@ -127,6 +128,7 @@ class Jogador(pg.sprite.Sprite):
 class Plataforma(pg.sprite.Sprite):
 
     def __init__(self, game, x, y, fase):
+        self._layer = LAYER_PLATAFORMA
         self.grupos = game.sprites_geral, game.plataformas
         pg.sprite.Sprite.__init__(self, self.grupos)
         self.game = game
@@ -152,6 +154,7 @@ class Plataforma(pg.sprite.Sprite):
 class Poder(pg.sprite.Sprite):
 
     def __init__(self, game, plat):
+        self._layer = LAYER_PODER
         self.grupos = game.sprites_geral, game.poderes
         pg.sprite.Sprite.__init__(self, self.grupos)
         self.game = game
@@ -166,4 +169,51 @@ class Poder(pg.sprite.Sprite):
         self.rect.bottom = self.plat.rect.top - 2
         self.rect.centerx = self.plat.rect.centerx
         if not self.game.plataformas.has(self.plat):
+            self.kill()
+
+
+class Mob(pg.sprite.Sprite):
+
+    def __init__(self, game):
+
+        self._layer = LAYER_MOB
+        self.grupos = game.sprites_geral, game.mobs
+        pg.sprite.Sprite.__init__(self, self.grupos)
+        self.game = game
+
+        self.image = pg.image.load(NYAH1)
+        self.rect = self.image.get_rect()
+        self.rect.centerx = random.choice([-100, WIDTH + 100])
+        self.imagem_esquerda = [pg.image.load(NYAH1), pg.image.load(NYAH2)]
+        self.imagem_direita = [pg.transform.flip(self.imagem_esquerda[0], True, False), pg.transform.flip(self.imagem_esquerda[1], True, False)]
+        self.imagens = self.imagem_direita
+        self.ultima_mudanca = 0
+        self.frame_atual = 0
+
+        self.velx = random.randrange(1, 4)
+        self.vely = 0
+        if self.rect.centerx > WIDTH:
+            self.imagens = self.imagem_esquerda
+            self.velx *= -1
+        self.rect.y = random.randrange(HEIGHT / -3, HEIGHT / 3)
+        self.accy = 0.8  # aceleração para o y
+
+    def update(self):
+        self.rect.x += self.velx
+        self.vely += self.accy
+        if self.vely > 5 or self.vely < -5:
+            self.accy *= -1
+
+        centro = self.rect.center
+        agora = pg.time.get_ticks()
+        if agora - self.ultima_mudanca > 100:
+            self.ultima_mudanca = agora
+            self.frame_atual = (self.frame_atual + 1) % len(self.imagens)
+            self.image = self.imagens[self.frame_atual]
+
+        self.rect = self.image.get_rect()
+        self.rect.center = centro
+
+        self.rect.y += self.vely
+        if self.rect.left > WIDTH + 100 or self.rect.right < -100:
             self.kill()

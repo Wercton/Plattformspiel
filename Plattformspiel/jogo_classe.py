@@ -22,15 +22,17 @@ class Game:
 
     def novo(self):
         # começa um novo jogo
-        self.sprites_geral = pg.sprite.Group()
+        self.sprites_geral = pg.sprite.LayeredUpdates()
         self.plataformas = pg.sprite.Group()
         self.plataformas_movendo_direita = pg.sprite.Group()
         self.plataformas_movendo_esquerda = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
         self.poderes = pg.sprite.Group()
         self.pontos = 0
         self.fase = 1
         self.velocidade_plat = 0
         self.prob_plat_movimento = 0
+        self.tempo_mob = 0
 
         self.jogador = Jogador(self)
 
@@ -53,43 +55,17 @@ class Game:
     def update(self):
 
         self.sprites_geral.update()
-
         self.verificar_colisoes()
 
         if not self.game_over():
-            # subindo a tela
-            if self.jogador.rect.top <= HEIGHT / 4:
-                self.jogador.pos.y += abs(self.jogador.vel.y)
-                for pltfrms in self.plataformas:
-                    pltfrms.rect.y += abs(self.jogador.vel.y) # usar -= no lugar de abs?
-                    if pltfrms.rect.top >= HEIGHT:
-                        pltfrms.kill()
-                        self.pontos += 10
-                        if self.BG_COR[1] > 3:
-                            self.BG_COR[1] -= 1.5
-                            self.BG_COR[2] -= 1.5
 
-            # PLATAFORMAS SE MOVENDO
-            for plat in self.plataformas_movendo_direita:
-                plat.rect.right += self.velocidade_plat
-                if plat.rect.left > WIDTH:
-                    plat.rect.right = 0
-                    if plat.rect.colliderect(self.jogador.rect):  # por que nunca entra?
-                        print('hm')
-                        self.jogador.pos.x = plat.rect.left + posicao_jogador_plataforma #ENTROOOOOU MAS DEU ERRO, ESTAVA CAINDO
-                else:
-                    posicao_jogador_plataforma = plat.rect.left - self.jogador.pos.x
-
-            for plat in self.plataformas_movendo_esquerda:
-                plat.rect.left -= self.velocidade_plat
-                if plat.rect.left < plat.rect.size[0] * -1:
-                    plat.rect.right = WIDTH + plat.rect.size[0]
-
+            self.subir_tela()  # muda as cores também
+            self.movimentar_plataformas()  # aumentar precisão
 
             if not self.pontos % 100:
                 self.configurar_fases()
 
-            self.spawnar_plataformas()
+            self.spawnar()
 
 
     def eventos(self):
@@ -110,8 +86,6 @@ class Game:
 
         self.tela.fill(self.BG_COR)
         self.sprites_geral.draw(self.tela)
-        self.plataformas.draw(self.tela)
-        self.tela.blit(self.jogador.image, self.jogador.rect)  # colocando jogador na frente
         self.draw_texto(str(self.pontos), 20, YELLOW, CENTRO_WIDTH, 10)
 
         pg.display.flip()
@@ -187,7 +161,6 @@ class Game:
 
 
     def verificar_colisoes(self):
-
         # plataforma
         hits = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
         for hit in hits:
@@ -203,7 +176,6 @@ class Game:
                     self.jogador.pos.x += self.velocidade_plat
                 elif hit in self.plataformas_movendo_esquerda:
                     self.jogador.pos.x -= self.velocidade_plat
-
         # poderes
         hits = pg.sprite.spritecollide(self.jogador, self.poderes, True)
         for hit in hits:
@@ -211,6 +183,10 @@ class Game:
                 self.audio_moeda.play()
                 self.jogador.vel.y = -IMPULSO_POTENCIA
                 self.jogador.pulando = False
+        # mobs - GAME OVER
+        hits = pg.sprite.spritecollide(self.jogador, self.mobs, False)
+        if hits:
+            self.partida = False
 
 
     def game_over(self):
@@ -225,6 +201,40 @@ class Game:
                 return True
         else:
             return False
+
+
+    def subir_tela(self):
+
+        if self.jogador.rect.top <= HEIGHT / 4:
+            self.jogador.pos.y += abs(self.jogador.vel.y)
+            for mob in self.mobs:  # mover mob junto com a tela
+                mob.rect.y += abs(self.jogador.vel.y)
+            for pltfrms in self.plataformas:  # mover plataformas junto com a tela
+                pltfrms.rect.y += abs(self.jogador.vel.y) # usar -= no lugar de abs?
+                if pltfrms.rect.top >= HEIGHT:
+                    pltfrms.kill()
+                    self.pontos += 10
+                    if self.BG_COR[1] > 3:
+                        self.BG_COR[1] -= 1.5
+                        self.BG_COR[2] -= 1.5
+
+
+    def movimentar_plataformas(self):
+        # direita
+        for plat in self.plataformas_movendo_direita:
+            plat.rect.right += self.velocidade_plat
+            if plat.rect.left > WIDTH:
+                plat.rect.right = 0
+                if plat.rect.colliderect(self.jogador.rect):  # por que nunca entra?
+                    print('hm')
+                    self.jogador.pos.x = plat.rect.left + posicao_jogador_plataforma #ENTROOOOOU MAS DEU ERRO, ESTAVA CAINDO
+            else:
+                posicao_jogador_plataforma = plat.rect.left - self.jogador.pos.x
+        # esquerda
+        for plat in self.plataformas_movendo_esquerda:
+            plat.rect.left -= self.velocidade_plat
+            if plat.rect.left < plat.rect.size[0] * -1:
+                plat.rect.right = WIDTH + plat.rect.size[0]
 
 
     def configurar_fases(self):
@@ -244,8 +254,15 @@ class Game:
             self.velocidade_plat = 0
 
 
-    def spawnar_plataformas(self):
+    def spawnar(self):
+        # spawnando mobs
+        agora = pg.time.get_ticks()
+        if agora - self.tempo_mob > FREQUENCIA_MOB:
+            self.tempo_mob = agora
+            if random.random() > 0.5:
+                Mob(self)
 
+        # spawnando plataformas
         while len(self.plataformas) < 5:
 
             mais_alto = HEIGHT

@@ -24,6 +24,13 @@ GRAVIDADE_JOGADOR = 0.8
 # propriedades do jogo
 IMPULSO_POTENCIA = 30
 FREQUENCIA_PODER = 5
+FREQUENCIA_MOB = 5000
+
+# layers
+LAYER_PLATAFORMA = 1
+LAYER_JOGADOR = 2
+LAYER_MOB = 2
+LAYER_PODER = 1
 
 # sprites - Jogador
 TAMANHO_JOGADOR = (40, 40)
@@ -74,6 +81,11 @@ ASTEROIDES = ["imagens/Plataforma_50_asteroide.png",
 # outros sprites
 FOGUETÃO = "imagens/coin.png"
 ROSA = "imagens/rosa2.png"
+EVIL_BIRD = "imagens/evil_bird.png"
+OLHO_CTHULHU = "imagens/olho_de_cthulhu_down.png"
+OLHO_CTHULHU_RETO = "imagens/olho_de_cthulhu_reto.png"
+NYAH1 = "imagens/nyah.png"
+NYAH2 = "imagens/nyah2.png"
 
 # audio
 MAIN_TRACK = 'loneliness.ogg'
