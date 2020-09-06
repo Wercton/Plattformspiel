@@ -259,7 +259,7 @@ class Game:
         agora = pg.time.get_ticks()
         if agora - self.tempo_mob > FREQUENCIA_MOB:
             self.tempo_mob = agora
-            if random.random() > 0.5:
+            if random.random() < PROBABILICADE_MOB:
                 Mob(self)
 
         # spawnando plataformas
