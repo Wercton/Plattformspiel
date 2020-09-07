@@ -59,7 +59,7 @@ class Jogador(pg.sprite.Sprite):
     def pular(self):
 
         if not self.vel.y: # se 0, verdadeiro
-            self.game.audio_pulo.play()
+            self.game.canal_efeito.play(self.game.audio_pulo)
             self.pulando = True
             self.vel.y = -PULO_JOGADOR
 
@@ -141,14 +141,15 @@ class Plataforma(pg.sprite.Sprite):
                 self.image = pg.image.load(random.choice(PLATAFORMA_FASE3))
         elif fase == 2:
             self.image = pg.image.load(random.choice(PLATAFORMA_FASE2))
-        else:
+        elif fase == 1:
             self.image = pg.image.load(random.choice(PLATAFORMA_FASE1))
+        elif fase == -1:
+            self.image = pg.image.load(PLATAFORMA_INICIAL)
         self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
-        if self.game.pontos >= 10:
-            if random.randrange(100) < FREQUENCIA_PODER:
-                Poder(self.game, self)
+        if random.randrange(100) < self.game.freq_poder:
+            Poder(self.game, self)
 
 
 class Poder(pg.sprite.Sprite):
@@ -222,10 +223,10 @@ class Mob(pg.sprite.Sprite):
 class Botao(pg.sprite.Sprite):
 
     def __init__(self, game, y, texto, selecionado=False):
-        
+
         pg.sprite.Sprite.__init__(self)
         self.game = game
-        self.texto = texto
+        self.texto, self.texto_primeiro = texto, texto
         self.selecionado = selecionado
 
         if self.selecionado:
@@ -242,11 +243,12 @@ class Botao(pg.sprite.Sprite):
 
     def update(self):
 
-            self.game.tela.blit(self.image, self.rect)
-            self.game.draw_texto(self.texto, 30, BLACK, self.rect.centerx, self.rect.centery - 15)
+        self.game.tela.blit(self.image, self.rect)
+        self.game.draw_texto(self.texto, 30, BLACK, self.rect.centerx, self.rect.centery - 15)
 
     def selecionar(self):
 
+        self.game.canal_efeito.play(self.game.audio_click)
         self.selecionado = True
         centro = self.rect.centerx
         y = self.rect.y
@@ -266,3 +268,7 @@ class Botao(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = centro
         self.rect.y = y
+
+    def mudar_texto(self, novo_texto):
+
+        self.texto = novo_texto

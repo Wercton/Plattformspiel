@@ -10,6 +10,12 @@ class Game:
         # inicializa o jogo
         pg.init()
         pg.mixer.init()
+        self.canal_musica = pg.mixer.Channel(0)
+        self.canal_efeito = pg.mixer.Channel(1)
+        self.audio = 1
+        self.sorte = 0
+        self.freq_poder = FREQUENCIA_PODER
+
         self.tela = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
@@ -17,11 +23,17 @@ class Game:
         self.fonte_texto = pg.font.match_font(FONTE_TEXTO)
         self.BG_COR = [0, 155, 155]
 
+        self.menu = True
+        self.game_over = False
+
         self.carregar_dados()
 
 
     def novo(self):
         # começa um novo jogo
+        self.canal_musica.play(self.soundtrack, loops = -1)
+
+        self.game_over = False
         self.sprites_geral = pg.sprite.LayeredUpdates()
         self.plataformas = pg.sprite.Group()
         self.plataformas_movendo_direita = pg.sprite.Group()
@@ -36,8 +48,7 @@ class Game:
 
         self.jogador = Jogador(self)
 
-        for pltfrms in PLATAFORMAS_LISTA:
-            p = Plataforma(self, *pltfrms, self.pontos)
+        p = Plataforma(self, -20, HEIGHT - 15, -1)
 
         self.run()
 
@@ -57,7 +68,7 @@ class Game:
         self.sprites_geral.update()
         self.verificar_colisoes()
 
-        if not self.game_over():
+        if not self.verificar_game_over():
 
             self.subir_tela()  # muda as cores também
             self.movimentar_plataformas()  # aumentar precisão
@@ -77,6 +88,8 @@ class Game:
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.jogador.pular()
+                elif event.key == pg.K_ESCAPE:
+                    self.partida = False
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_SPACE:
                     self.jogador.interromper_pulo()
@@ -102,63 +115,160 @@ class Game:
 
     def tela_inicial(self):
 
+        pg.mixer.fadeout(1000)
+
         self.decidindo = True
-        self.soundtrack.play(-1)
-        self.opcoes = 0
+        self.botao_selecionado = 0
         self.botao_jogar = Botao(self, 125, "JOGAR", True)
         self.botao_opcoes = Botao(self, 200, "OPÇÕES")
         self.botao_sair = Botao(self, 275, "SAIR")
         self.botoes = [self.botao_jogar, self.botao_opcoes, self.botao_sair]
+        self.opcoes = False
 
         while self.decidindo:
 
             self.tela.fill(self.BG_COR)
-
             self.draw_texto(TITLE, 30, BLACK, 185, 20)
-            self.botoes[0].update()
-            self.botoes[1].update()
-            self.botoes[2].update()
 
-            for event in pg.event.get():
-                if event.type == pg.QUIT:
-                    self.decidindo = False
-                    self.jogando = False
-                    esperar = False
-                elif event.type == pg.KEYDOWN:
-                    keys = pg.key.get_pressed()
-                    if keys[pg.K_DOWN]:
-                        self.botoes[self.opcoes].deselecionar()
-                        if self.opcoes < 2:
-                            self.opcoes += 1
-                            self.botoes[self.opcoes].selecionar()
-                        else:
-                            self.opcoes = 0
-                            self.botoes[self.opcoes].selecionar()
-                    elif keys[pg.K_UP]:
-                        self.botoes[self.opcoes].deselecionar()
-                        if self.opcoes > 0:
-                            self.opcoes -= 1
-                            self.botoes[self.opcoes].selecionar()
-                        else:
-                            self.opcoes = 2
-                            self.botoes[self.opcoes].selecionar()
-                    elif keys[pg.K_RETURN]:
-                        if not self.opcoes:
-                            self.decidindo = False
-                        elif self.opcoes == 2:
-                            self.decidindo = False
-                            self.jogando = False
+            for botao in self.botoes:
+                botao.update()
 
+            self.tela_inicial_eventos()
+
+            if self.opcoes:
+                self.tela_opcoes()
 
             pg.display.flip()
+
+
+    def tela_inicial_eventos(self):
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.decidindo = False
+                self.jogando = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_DOWN:
+                    self.botoes[self.botao_selecionado].deselecionar()
+                    if self.botao_selecionado < 2:
+                        self.botao_selecionado += 1
+                        self.botoes[self.botao_selecionado].selecionar()
+                    else:
+                        self.botao_selecionado = 0
+                        self.botoes[self.botao_selecionado].selecionar()
+                elif event.key == pg.K_UP:
+                    self.botoes[self.botao_selecionado].deselecionar()
+                    if self.botao_selecionado > 0:
+                        self.botao_selecionado -= 1
+                        self.botoes[self.botao_selecionado].selecionar()
+                    else:
+                        self.botao_selecionado = 2
+                        self.botoes[self.botao_selecionado].selecionar()
+                elif event.key == pg.K_RETURN:
+                    if not self.botao_selecionado:
+                        self.decidindo = False
+                    elif self.botao_selecionado == 1:
+                        self.opcoes = True
+                    elif self.botao_selecionado == 2:
+                        self.decidindo = False
+                        self.jogando = False
+
+
+    def tela_opcoes(self):
+
+        self.botao_selecionado = 0
+
+        if self.audio:
+            self.botao_audio = Botao(self, 125, "AUDIO ON", True)
+        else:
+            self.botao_audio = Botao(self, 125, "AUDIO OFF", True)
+
+        if self.sorte:
+            self.botao_sorte = Botao(self, 200, "SORTE ON", False)
+        else:
+            self.botao_sorte = Botao(self, 200, "SORTE OFF", False)
+
+        self.botao_retornar = Botao(self, 275, "RETORNAR", False)
+        self.botoes_opcoes = [self.botao_audio, self.botao_sorte, self.botao_retornar]
+
+        while self.opcoes:
+
+            self.tela.fill(self.BG_COR)
+            self.draw_texto("OPÇÕES", 30, BLACK, 185, 20)
+
+            for botao in self.botoes_opcoes:
+                botao.update()
+
+            self.tela_opcoes_eventos()
+
+            pg.display.flip()
+
+
+    def tela_opcoes_eventos(self):
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.decidindo = False
+                self.jogando = False
+                self.opcoes = False
+            elif event.type == pg.KEYDOWN:
+
+
+                if event.key == pg.K_DOWN:
+                    self.botoes_opcoes[self.botao_selecionado].deselecionar()
+                    if self.botao_selecionado < 2:
+                        self.botao_selecionado += 1
+                        self.botoes_opcoes[self.botao_selecionado].selecionar()
+                    else:
+                        self.botao_selecionado = 0
+                        self.botoes_opcoes[self.botao_selecionado].selecionar()
+                elif event.key == pg.K_UP:
+                    self.botoes_opcoes[self.botao_selecionado].deselecionar()
+                    if self.botao_selecionado > 0:
+                        self.botao_selecionado -= 1
+                        self.botoes_opcoes[self.botao_selecionado].selecionar()
+                    else:
+                        self.botao_selecionado = 2
+                        self.botoes_opcoes[self.botao_selecionado].selecionar()
+
+
+
+                elif event.key == pg.K_RETURN:
+                    if self.botao_selecionado == 2:
+                        self.opcoes = False
+                        self.botao_selecionado = 1
+                    elif not self.botao_selecionado:
+                        if self.audio:
+                            self.botoes_opcoes[0].mudar_texto("AUDIO OFF")
+                            self.canal_musica.set_volume(0)
+                        else:
+                            self.botoes_opcoes[0].mudar_texto("AUDIO ON")
+                            self.canal_musica.set_volume(1)
+                        self.audio = 0 if self.audio else 1
+                    elif self.botao_selecionado == 1:
+                        if self.sorte:
+                            self.botoes_opcoes[1].mudar_texto("SORTE OFF")
+                            self.freq_poder = FREQUENCIA_PODER
+                        else:
+                            self.botoes_opcoes[1].mudar_texto("SORTE ON")
+                            self.freq_poder = 100
+                        self.sorte = 0 if self.sorte else 1
+
+                elif event.key == pg.K_ESCAPE:
+                    self.opcoes = False
+                    self.botao_selecionado = 1  # but why?
+
 
 
     def tela_saida(self):
 
         pg.mixer.fadeout(1000)
-        self.audio_gameover.play(-1)
-        self.BG_COR = [0, 155, 155]
-        self.tela.fill(self.BG_COR)
+        self.canal_musica.play(self.audio_gameover, loops = -1)
+        self.decidindo = True
+        self.botao_selecionado = 0
+        self.botao_tentar_novamente = Botao(self, 150, "NOVAMENTE", True)
+        self.botao_menu = Botao(self, 215, "MENU", False)
+        self.botoes = [self.botao_tentar_novamente, self.botao_menu]
 
         if self.recorde < self.pontos:
             self.recorde = self.pontos
@@ -172,17 +282,38 @@ class Game:
             self.draw_texto(texto_pontucao, 30, WHITE, CENTRO_WIDTH, HEIGHT/4)
             self.draw_texto(texto_recorde, 20, WHITE, CENTRO_WIDTH, HEIGHT/4 + 45)
 
-        self.draw_texto('Não foi dessa vez! :(', 20, BLACK, CENTRO_WIDTH, HEIGHT/2 - 20)
-        self.draw_texto('Mas não se procupe, não será uma', 18, BLACK, CENTRO_WIDTH, HEIGHT/2 + 20)
-        self.draw_texto('"quedinha" que desmotivará Pipipopo.', 18, BLACK, CENTRO_WIDTH, HEIGHT/2 + 40)
-        self.draw_texto('Ele passa bem e está pronto para', 18, BLACK, CENTRO_WIDTH, HEIGHT/2 + 60)
-        self.draw_texto('tentar outra vez!', 18, BLACK, CENTRO_WIDTH, HEIGHT/2 + 80)
-        pg.display.flip()
+        while self.decidindo:
 
-        self.esperando_comando()
+            self.BG_COR = [0, 155, 155]
+            self.tela.fill(self.BG_COR)
 
-        self.audio_gameover.fadeout(500)
-        self.soundtrack.play(-1)
+            for botao in self.botoes:
+                botao.update()
+
+            self.tela_saida_eventos()
+
+            pg.display.flip()
+
+        self.audio_gameover.fadeout(1000)
+
+
+    def tela_saida_eventos(self):
+
+        for event in pg.event.get():
+            if event.type == pg.QUIT:
+                self.decidindo = False
+                self.jogando = False
+            elif event.type == pg.KEYDOWN:
+                if event.key == pg.K_DOWN or event.key == pg.K_UP:
+                    self.botoes[self.botao_selecionado].deselecionar()
+                    self.botao_selecionado = 0 if self.botao_selecionado else 1
+                    self.botoes[self.botao_selecionado].selecionar()
+                elif event.key == pg.K_RETURN:
+                    self.decidindo = False
+                    if self.botao_selecionado:
+                        self.menu = True
+                    else:
+                        self.menu = False
 
 
     def esperando_comando(self):
@@ -216,16 +347,17 @@ class Game:
         hits = pg.sprite.spritecollide(self.jogador, self.poderes, True)
         for hit in hits:
             if hit.tipo == 'impulso':
-                self.audio_moeda.play()
+                self.canal_efeito.play(self.audio_moeda)
                 self.jogador.vel.y = -IMPULSO_POTENCIA
                 self.jogador.pulando = False
         # mobs - GAME OVER
         hits = pg.sprite.spritecollide(self.jogador, self.mobs, False)
         if hits:
+            self.game_over = True
             self.partida = False
 
 
-    def game_over(self):
+    def verificar_game_over(self):
 
         if self.jogador.rect.top > HEIGHT:
             for sprite in self.sprites_geral:
@@ -234,6 +366,7 @@ class Game:
                     sprite.kill()
             if not len(self.plataformas): # só quando some todas plataformas, novo jogo se inicia
                 self.partida = False
+                self.game_over = True
                 return True
         else:
             return False
@@ -278,7 +411,7 @@ class Game:
             self.fase = 4
             self.velocidade_plat = 3
             self.soundtrack.fadeout(3000)
-            self.soundtrack_final.play(-1)
+            self.canal_musica.play(self.soundtrack_final, loops = -1)
             self.jogador.gravidade = 0.6
             self.prob_plat_movimento = 0.5
         elif self.pontos == 500:
@@ -345,19 +478,22 @@ class Game:
         # música
         self.sound_dir = path.join(self.dir, 'audio')
         self.soundtrack = pg.mixer.Sound(path.join(self.sound_dir, MAIN_TRACK))
-        self.soundtrack.set_volume(0.0) #0.15
+        self.soundtrack.set_volume(0.15) #0.15
 
         #self.soundtrack_suspense = pg.mixer.Sound(path.join(self.sound_dir, MAIN_TRACK_SUSPENSE))
         #self.soundtrack_suspense.set_volume(0.05) #0.15
 
         self.soundtrack_final = pg.mixer.Sound(path.join(self.sound_dir, MAIN_TRACK_FINAL))
-        self.soundtrack_final.set_volume(0.0) #0.05
+        self.soundtrack_final.set_volume(0.05) #0.05
 
         self.audio_pulo = pg.mixer.Sound(path.join(self.sound_dir, PULO_AUDIO))
-        self.audio_pulo.set_volume(0.0) #0.04
+        self.audio_pulo.set_volume(0.04) #0.04
 
         self.audio_gameover = pg.mixer.Sound(path.join(self.sound_dir, GAME_OVER_AUDIO))
-        self.audio_gameover.set_volume(0.0) #0.1
+        self.audio_gameover.set_volume(0.1) #0.1
 
         self.audio_moeda = pg.mixer.Sound(path.join(self.sound_dir, COIN_AUDIO))
-        self.audio_moeda.set_volume(0.0) #0.2
+        self.audio_moeda.set_volume(0.2) #0.2
+
+        self.audio_click = pg.mixer.Sound(path.join(self.sound_dir, CLICK))
+        self.audio_click.set_volume(1)

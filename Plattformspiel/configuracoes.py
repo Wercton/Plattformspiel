@@ -47,11 +47,7 @@ CAIR_SPRITE = "imagens/Pipipopo_cair.png"
 
 # plataformas
 WIDTH_PLAT = 15
-PLATAFORMAS_LISTA = [(0, HEIGHT - WIDTH_PLAT),
-                    (WIDTH/3, HEIGHT - (HEIGHT/4)),
-                    (10, HEIGHT/2),
-                    (WIDTH/2, 120),
-                    (WIDTH/3, 10)]
+PLATAFORMA_INICIAL = "imagens/Primeira_plataforma.png"
 
 PLATAFORMA_FASE1 = ["imagens/Plataforma_100.png",
                     "imagens/Plataforma_100_terra2.png",
@@ -91,6 +87,7 @@ BOTAO = "imagens/botao.png"
 BOTAO_SELECIONADO = "imagens/botao_selecionado.png"
 
 # audio
+CLICK = "click.ogg"
 MAIN_TRACK = 'loneliness.ogg'
 MAIN_TRACK_FINAL = 'was_it_all_for_nothing.ogg'
 MAIN_TRACK_SUSPENSE = "there_is_something_wrong.ogg"
