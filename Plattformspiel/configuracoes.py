@@ -32,6 +32,9 @@ LAYER_PLATAFORMA = 1
 LAYER_JOGADOR = 2
 LAYER_MOB = 2
 LAYER_PODER = 1
+LAYER_NUVENS = 0
+LAYER_NUVENS_FRENTE = 3
+LAYER_SISTEMA = 5
 
 # sprites - Jogador
 TAMANHO_JOGADOR = (40, 40)
@@ -77,10 +80,7 @@ ASTEROIDES = ["imagens/Plataforma_50_asteroide.png",
 
 # outros sprites
 FOGUETÃO = "imagens/coin.png"
-ROSA = "imagens/rosa2.png"
-EVIL_BIRD = "imagens/evil_bird.png"
-OLHO_CTHULHU = "imagens/olho_de_cthulhu_down.png"
-OLHO_CTHULHU_RETO = "imagens/olho_de_cthulhu_reto.png"
+NUVENS_SPRITESHEET = "imagens/clouds.png"
 NYAH1 = "imagens/nyah.png"
 NYAH2 = "imagens/nyah2.png"
 BOTAO = "imagens/botao.png"

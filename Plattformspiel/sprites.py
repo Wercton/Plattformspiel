@@ -3,6 +3,19 @@ import random
 from configuracoes import *
 
 
+class Spritesheet:
+
+    def __init__(self, filename):
+
+        self.spritesheet = pg.image.load(filename).convert()
+
+    def selecionar_imagem(self, x, y, width, height):
+
+        image = pg.Surface((width, height))
+        image.blit(self.spritesheet, (0, 0), (x, y, width, height))
+        return image
+
+
 class Plataforma(pg.sprite.Sprite):
 
     def __init__(self, game, x, y, fase):
@@ -91,6 +104,7 @@ class Mob(pg.sprite.Sprite):
             self.image = self.imagens[self.frame_atual]
 
         self.rect = self.image.get_rect()
+        self.mask = pg.mask.from_surface(self.image)
         self.rect.center = centro
 
         self.rect.y += self.vely
@@ -102,6 +116,7 @@ class Botao(pg.sprite.Sprite):
 
     def __init__(self, game, y, texto, selecionado=False):
 
+        self.__layer = LAYER_SISTEMA
         pg.sprite.Sprite.__init__(self)
         self.game = game
         self.texto, self.texto_primeiro = texto, texto
@@ -150,3 +165,45 @@ class Botao(pg.sprite.Sprite):
     def mudar_texto(self, novo_texto):
 
         self.texto = novo_texto
+
+
+class Nuvem(pg.sprite.Sprite):
+
+    def __init__(self, game, fase):
+
+        if random.random() > 0.5 and fase > 1:
+            self._layer = LAYER_NUVENS_FRENTE
+            self.frente = True
+        else:
+            self._layer = LAYER_NUVENS
+            self.frente = False
+        self.grupos = game.sprites_geral, game.nuvens
+        pg.sprite.Sprite.__init__(self, self.grupos)
+        self.game = game
+
+        self.nuvens_imagem = []
+        width, height = 56, 23
+        for i in range(4):
+            self.nuvens_imagem.append(self.game.spritesheet.selecionar_imagem(0, height*i, width, height))
+        self.image = random.choice(self.nuvens_imagem)
+        self.image.set_colorkey(BLACK)
+
+        self.rect = self.image.get_rect()
+        if not self.frente:
+            scale = random.randrange(150, 250) / 100
+        else:
+            scale = 3
+        self.image = pg.transform.scale(self.image, (int(self.rect.width * scale), int(self.rect.height * scale)))
+        if self.frente:
+            self.rect.x = -self.rect.width
+        else:
+            self.rect.x = random.randrange(WIDTH - self.rect.width)
+        self.rect.y = random.randrange(-500, -50)
+
+    def update(self):
+        if self.rect.top > HEIGHT:
+            self.kill()
+        if self.frente:
+            self.rect.x += 1
+            if self.rect.left > WIDTH + 50:
+                self.rect.right = -self.rect.width

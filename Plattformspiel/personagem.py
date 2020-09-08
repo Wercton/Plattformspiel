@@ -123,3 +123,4 @@ class Jogador(pg.sprite.Sprite):
                     self.ultima_mudanca = agora
                     self.frame_atual = (self.frame_atual + 1) % len(self.frame_parado_l) # BOOOOM
                     self.image = self.frame_parado_l[self.frame_atual]
+        self.mask = pg.mask.from_surface(self.image)

@@ -36,12 +36,15 @@ class Game:
         self.canal_musica.play(self.soundtrack, loops = -1)
 
         self.game_over = False
+
         self.sprites_geral = pg.sprite.LayeredUpdates()
         self.plataformas = pg.sprite.Group()
         self.plataformas_movendo_direita = pg.sprite.Group()
         self.plataformas_movendo_esquerda = pg.sprite.Group()
         self.mobs = pg.sprite.Group()
         self.poderes = pg.sprite.Group()
+        self.nuvens = pg.sprite.Group()
+
         self.pontos = 0
         self.fase = 1
         self.velocidade_plat = 0
@@ -51,6 +54,10 @@ class Game:
         self.jogador = Jogador(self)
 
         p = Plataforma(self, -20, HEIGHT - 15, -1)
+
+        for i in range(3):
+            c = Nuvem(self, self.fase)
+            c.rect.y += 400
 
         self.run()
 
@@ -87,6 +94,7 @@ class Game:
             if event.type == pg.QUIT:
                 self.partida = False
                 self.jogando = False
+                self.menu = False
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
                     self.jogador.pular()
@@ -387,7 +395,7 @@ class Game:
                 self.jogador.vel.y = -IMPULSO_POTENCIA
                 self.jogador.pulando = False
         # mobs - GAME OVER
-        hits = pg.sprite.spritecollide(self.jogador, self.mobs, False)
+        hits = pg.sprite.spritecollide(self.jogador, self.mobs, False, pg.sprite.collide_mask)
         if hits:
             self.game_over = True
             self.partida = False
@@ -411,7 +419,15 @@ class Game:
     def subir_tela(self):
 
         if self.jogador.rect.top <= HEIGHT / 4:
+            if self.fase < 4:
+                if random.randrange(100) < 3:
+                    Nuvem(self, self.fase)
             self.jogador.pos.y += abs(self.jogador.vel.y)
+            for nuvem in self.nuvens:
+                if nuvem.frente:
+                    nuvem.rect.y += abs(self.jogador.vel.y * 1.2)
+                else:
+                    nuvem.rect.y += abs(self.jogador.vel.y / 3)
             for mob in self.mobs:  # mover mob junto com a tela
                 mob.rect.y += abs(self.jogador.vel.y)
             for pltfrms in self.plataformas:  # mover plataformas junto com a tela
@@ -499,7 +515,7 @@ class Game:
 
 
     def carregar_dados(self):
-
+        # pontuação
         self.dir = path.dirname(__file__)
         try:
             with open(path.join(self.dir, RECORDE_FILE), 'r+') as f:
@@ -510,14 +526,13 @@ class Game:
         except:
             with open(path.join(self.dir, RECORDE_FILE), 'w') as f:
                 self.recorde = 0
-
         # música
         self.sound_dir = path.join(self.dir, 'audio')
         self.soundtrack = pg.mixer.Sound(path.join(self.sound_dir, MAIN_TRACK))
         self.soundtrack.set_volume(0.15) #0.15
 
         self.soundtrack_final = pg.mixer.Sound(path.join(self.sound_dir, MAIN_TRACK_FINAL))
-        self.soundtrack_final.set_volume(0.05) #0.05
+        self.soundtrack_final.set_volume(0.1) #0.05
 
         self.audio_pulo = pg.mixer.Sound(path.join(self.sound_dir, PULO_AUDIO))
         self.audio_pulo.set_volume(0.04) #0.04
@@ -529,4 +544,6 @@ class Game:
         self.audio_moeda.set_volume(0.2) #0.2
 
         self.audio_click = pg.mixer.Sound(path.join(self.sound_dir, CLICK))
-        self.audio_click.set_volume(1)
+
+        # spritesheet
+        self.spritesheet = Spritesheet(NUVENS_SPRITESHEET)
