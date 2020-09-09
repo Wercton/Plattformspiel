@@ -41,12 +41,11 @@ TAMANHO_JOGADOR = (40, 40)
 POSICAO_INICIAL = (TAMANHO_JOGADOR[0], HEIGHT - TAMANHO_JOGADOR[1]/2)
 PULO_JOGADOR = 17
 
-JOGADOR_SPRITE = "imagens/Pipipopo.png"
-JOGADOR_SPRITE2 = "imagens/Pipipopo2.png"
-ANDAR1_SPRITE = "imagens/Pipipopo_andar1.png"
-ANDAR2_SPRITE = "imagens/Pipipopo_andar2.png"
-PULO_SPRITE = "imagens/Pipipopo_pular.png"
-CAIR_SPRITE = "imagens/Pipipopo_cair.png"
+JOGADOR_SPRITESHEET_BLUE = "imagens/PipipopoSpritesheet.png"
+JOGADOR_SPRITESHEET_PINK = "imagens/PipipopoSpritesheet2.png"
+JOGADOR_SPRITESHEET_GRAY = "imagens/PipipopoSpritesheet3.png"
+JOGADOR_SPRITESHEET_GREEN = "imagens/PipipopoSpritesheet4.png"
+
 
 # plataformas
 WIDTH_PLAT = 15

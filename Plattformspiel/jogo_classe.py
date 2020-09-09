@@ -60,6 +60,10 @@ class Game:
             c = Nuvem(self, self.fase)
             c.rect.y += 400
 
+        self.jogador_spritesheet = random.choice([Spritesheet(JOGADOR_SPRITESHEET_GREEN),\
+        Spritesheet(JOGADOR_SPRITESHEET_BLUE), Spritesheet(JOGADOR_SPRITESHEET_PINK),\
+        Spritesheet(JOGADOR_SPRITESHEET_GRAY)])
+
         self.run()
 
 
@@ -553,3 +557,4 @@ class Game:
 
         # spritesheet
         self.spritesheet = Spritesheet(NUVENS_SPRITESHEET)
+        self.jogador_spritesheet = random.choice([Spritesheet(JOGADOR_SPRITESHEET_GREEN)])

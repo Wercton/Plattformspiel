@@ -10,7 +10,8 @@ class Jogador(pg.sprite.Sprite):
         self._layer = LAYER_JOGADOR
         self.grupos = game.sprites_geral
         pg.sprite.Sprite.__init__(self, self.grupos)
-        self.image = pg.transform.scale(pg.image.load(JOGADOR_SPRITE), TAMANHO_JOGADOR)
+        self.game = game
+        self.image = pg.transform.scale(self.game.jogador_spritesheet.selecionar_imagem(0, 0, 46, 50), TAMANHO_JOGADOR)
         self.rect = self.image.get_rect()
         self.rect.center = (POSICAO_INICIAL)
         self.pos = vec(POSICAO_INICIAL)
@@ -18,7 +19,6 @@ class Jogador(pg.sprite.Sprite):
         self.acc = vec(0, 0)
         self.gravidade = GRAVIDADE_JOGADOR
         self.pulando = False
-        self.game = game
 
         self.andando = False
         self.frame_atual = 0
@@ -35,9 +35,14 @@ class Jogador(pg.sprite.Sprite):
         if keys[pg.K_LEFT]:
             self.acc.x = -ACC_JOGADOR
             self.direita = False
+            self.andando = True
         elif keys[pg.K_RIGHT]:
             self.acc.x = ACC_JOGADOR
             self.direita = True
+            self.andando = True
+        else:
+            self.andando = False
+
 
         # aplica fricção
         self.acc.x += self.vel.x * FRICCAO_JOGADOR  # definido no x para não atrapalhar gravidade
@@ -71,23 +76,27 @@ class Jogador(pg.sprite.Sprite):
 
     def carregar_imagens(self):
 
-        self.frame_pular_l = pg.transform.scale(pg.image.load(PULO_SPRITE), TAMANHO_JOGADOR)
-        self.frame_pular_r = pg.transform.flip(self.frame_pular_l, True, False)
+        self.frame_esquerda = []
+        for i in range(6):
+            self.frame_esquerda.append(pg.transform.scale(self.game.jogador_spritesheet.selecionar_imagem(0, 50*i, 46, 50), TAMANHO_JOGADOR))
+            self.frame_esquerda[i].set_colorkey(BLACK)
 
-        self.frame_parado_l = [pg.transform.scale(pg.image.load(JOGADOR_SPRITE), TAMANHO_JOGADOR),
-                            pg.transform.scale(pg.image.load(JOGADOR_SPRITE2), TAMANHO_JOGADOR)]
-        self.frame_parado_r = []
-        for frame in self.frame_parado_l:
-            self.frame_parado_r.append(pg.transform.flip(frame, True, False))
+        self.frame_direita = []
+        for i in range(6):
+            self.frame_direita.append(pg.transform.scale(self.game.jogador_spritesheet.selecionar_imagem(46, 50*i, 46, 50), TAMANHO_JOGADOR))
+            self.frame_direita[i].set_colorkey(BLACK)
 
-        self.frame_andar_l = [pg.transform.scale(pg.image.load(ANDAR1_SPRITE), TAMANHO_JOGADOR),
-                            pg.transform.scale(pg.image.load(ANDAR2_SPRITE), TAMANHO_JOGADOR)]
-        self.frame_andar_r = []
-        for frame in self.frame_andar_l:
-            self.frame_andar_r.append(pg.transform.flip(frame, True, False))
+        self.frame_parado_l = [self.frame_esquerda[0], self.frame_esquerda[1]]
+        self.frame_parado_r = [self.frame_direita[0], self.frame_direita[1]]
 
-        self.frame_cair_l = pg.transform.scale(pg.image.load(CAIR_SPRITE), TAMANHO_JOGADOR)
-        self.frame_cair_r = pg.transform.flip(self.frame_cair_l, True, False)
+        self.frame_andar_l = [self.frame_esquerda[2], self.frame_esquerda[3]]
+        self.frame_andar_r = [self.frame_direita[2], self.frame_direita[3]]
+
+        self.frame_pular_l = self.frame_esquerda[4]
+        self.frame_pular_r = self.frame_direita[4]
+
+        self.frame_cair_l = self.frame_esquerda[5]
+        self.frame_cair_r = self.frame_direita[5]
 
     def animar(self):
 
@@ -113,8 +122,8 @@ class Jogador(pg.sprite.Sprite):
                     self.ultima_mudanca = agora
                     self.frame_atual = (self.frame_atual + 1) % len(self.frame_andar_l) # BOOOOM
                     self.image = self.frame_andar_l[self.frame_atual]
-        else:  # parado
-            if agora - self.ultima_mudanca > 400:
+        elif not self.andando:  # parado
+            if agora - self.ultima_mudanca > 300:
                 if self.direita:
                     self.ultima_mudanca = agora
                     self.frame_atual = (self.frame_atual + 1) % len(self.frame_parado_r) # BOOOOM
