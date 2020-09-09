@@ -5,6 +5,7 @@ from personagem import *
 from sprites import *
 from os import path
 
+
 class Game:
 
     def __init__(self):
@@ -347,6 +348,7 @@ class Game:
             if event.type == pg.QUIT:
                 self.decidindo = False
                 self.jogando = False
+                self.menu = False
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_DOWN or event.key == pg.K_UP:
                     self.botoes[self.botao_selecionado].deselecionar()
@@ -373,9 +375,9 @@ class Game:
 
     def verificar_colisoes(self):
         # plataforma
-        hits = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
-        for hit in hits:
-            if self.jogador.vel.y > -0.1:
+        if self.jogador.vel.y > -0.1:
+            hits = pg.sprite.spritecollide(self.jogador, self.plataformas, False)
+            for hit in hits:
                 if self.jogador.pos.x < hit.rect.right + 15 and \
                 self.jogador.rect.x > hit.rect.left - 35:  # cai quando as duas perninhas dele sai da plataforma
                     if self.jogador.pos.y - 5 <= hit.rect.bottom - 2:  # corrigindo bug de transportar para o topo sem alcançar
@@ -504,8 +506,12 @@ class Game:
                 self.mais_alto = mais_alto - HEIGHT//2.2
                 self.mais_baixo = mais_alto - HEIGHT//2.6
 
-            p = Plataforma(self, random.randrange(0, WIDTH - 50),
+            p = Plataforma(self, random.randrange(0, WIDTH),
                         random.randrange(self.mais_alto, self.mais_baixo), self.fase)
+
+            if p.rect.centerx > WIDTH - p.rect.width//2:
+                p.rect.centerx = WIDTH - p.rect.width//2
+
             if self.fase >= 3:
                 r = random.random()
                 if r < self.prob_plat_movimento:
@@ -532,7 +538,7 @@ class Game:
         self.soundtrack.set_volume(0.15) #0.15
 
         self.soundtrack_final = pg.mixer.Sound(path.join(self.sound_dir, MAIN_TRACK_FINAL))
-        self.soundtrack_final.set_volume(0.1) #0.05
+        self.soundtrack_final.set_volume(0.12) #0.05
 
         self.audio_pulo = pg.mixer.Sound(path.join(self.sound_dir, PULO_AUDIO))
         self.audio_pulo.set_volume(0.04) #0.04

@@ -24,8 +24,8 @@ GRAVIDADE_JOGADOR = 0.8
 # propriedades do jogo
 IMPULSO_POTENCIA = 30
 FREQUENCIA_PODER = 5
-FREQUENCIA_MOB = 5000
-PROBABILICADE_MOB = 0.3
+FREQUENCIA_MOB = 3000
+PROBABILICADE_MOB = 0.4
 
 # layers
 LAYER_PLATAFORMA = 1
@@ -79,6 +79,9 @@ ASTEROIDES = ["imagens/Plataforma_50_asteroide.png",
             "imagens/Plataforma_50_asteroide_3.png"]
 
 # outros sprites
+ATENCAO1 = "imagens/atencao_vermelho.png"
+ATENCAO2 = "imagens/atencao_vermelho_claro.png"
+
 FOGUETÃO = "imagens/coin.png"
 NUVENS_SPRITESHEET = "imagens/clouds.png"
 NYAH1 = "imagens/nyah.png"
