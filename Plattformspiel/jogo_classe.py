@@ -32,6 +32,8 @@ class Game:
         self.carregar_dados()
 
 
+
+
     def novo(self):
         # começa um novo jogo
         self.canal_musica.play(self.soundtrack, loops = -1)
@@ -52,6 +54,7 @@ class Game:
         self.prob_plat_movimento = 0
         self.tempo_mob = 0
 
+        self.jogador_spritesheet = random.choice(self.jogadores_spritesheets)
         self.jogador = Jogador(self)
 
         p = Plataforma(self, -20, HEIGHT - 15, -1)
@@ -59,10 +62,6 @@ class Game:
         for i in range(3):
             c = Nuvem(self, self.fase)
             c.rect.y += 400
-
-        self.jogador_spritesheet = random.choice([Spritesheet(JOGADOR_SPRITESHEET_GREEN),\
-        Spritesheet(JOGADOR_SPRITESHEET_BLUE), Spritesheet(JOGADOR_SPRITESHEET_PINK),\
-        Spritesheet(JOGADOR_SPRITESHEET_GRAY)])
 
         self.run()
 
@@ -75,6 +74,7 @@ class Game:
             self.eventos()
             self.update()
             self.draw()
+        self.BG_COR = [0, 155, 155]
 
 
     def update(self):
@@ -315,7 +315,6 @@ class Game:
 
         while self.decidindo:
 
-            self.BG_COR = [0, 155, 155]
             self.tela.fill(self.BG_COR)
 
             for botao in self.botoes:
@@ -557,4 +556,7 @@ class Game:
 
         # spritesheet
         self.spritesheet = Spritesheet(NUVENS_SPRITESHEET)
-        self.jogador_spritesheet = random.choice([Spritesheet(JOGADOR_SPRITESHEET_GREEN)])
+        self.jogadores_spritesheets = [Spritesheet(JOGADOR_SPRITESHEET_GREEN),\
+                                        Spritesheet(JOGADOR_SPRITESHEET_BLUE),\
+                                        Spritesheet(JOGADOR_SPRITESHEET_GRAY),\
+                                        Spritesheet(JOGADOR_SPRITESHEET_PINK)]
