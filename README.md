@@ -9,15 +9,24 @@
 
 Este é um repositório para os jogos que produzi usando a biblioteca do Python, `pygame`.
 
+- [Plattformspiel](https://github.com/Wercton/My-PyGames/tree/master/Plattformspiel)
 - [Soco no Fascista](https://github.com/Wercton/My-PyGames/tree/master/punch-the-clown)
+
+ ---
  
+ ### Plattformspiel
+ <a href="https://github.com/Wercton/My-PyGames/tree/master/Plattformspiel"><img src="./Plattformspiel/printscreen/printscreen1.png" width="400px" /></a>
+ 
+**Sobre**:  
+O objetivo deste jogo é ajudar o jovem Pipipopo a chegar no topo da Montanha por meio da escalada de plataformas.
+  
  ---
  
  ### Soco no Fascista
 <a href="https://github.com/Wercton/My-PyGames/tree/master/punch-the-clown"><img src="https://i.ibb.co/7tC8tJn/soco-no-fascista-exemplo1.png" width="400px" /></a>
  
 **Sobre**:  
-O objetivo desde jogo é socar o personagem fictício 40 vezes seguidas e, consequentemente, salvar o Brasil. A cada acerto o personagem se move mais rapidamente.  
+O objetivo deste jogo é socar o personagem fictício 40 vezes seguidas e, consequentemente, salvar o Brasil. A cada acerto o personagem se move mais rapidamente.  
   
 **A ser implementado:**
 - [X] adicionar efeitos sonoros
