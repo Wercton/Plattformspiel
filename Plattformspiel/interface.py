@@ -1,19 +1,10 @@
 import pygame as pg
 from jogo_classe import Game
-import random
 from configuracoes import *
-from personagem import *
 from sprites import *
-from os import path
+
 
 class Interface_Game(Game):
-
-
-    def init(self):
-
-        self.jogando = True
-        self.game_over = True
-        self.menu = True
 
 
     def play(self):
@@ -26,13 +17,13 @@ class Interface_Game(Game):
                 self.tela_inicial()
 
 
-    def draw(self):
+    def draw_texto(self, texto, tamanho, cor, x, y):
 
-        self.tela.fill(self.BG_COR)
-        self.sprites_geral.draw(self.tela)
-        self.draw_texto(str(self.pontos), 20, YELLOW, CENTRO_WIDTH, 10)
-
-        pg.display.flip()
+        fonte = pg.font.Font(self.fonte_texto, tamanho)
+        texto_surface = fonte.render(texto, True, cor) # True para anti-alising
+        texto_rect = texto_surface.get_rect()
+        texto_rect.midtop = (x, y)
+        self.tela.blit(texto_surface, texto_rect)
 
 
     def tela_inicial(self):
