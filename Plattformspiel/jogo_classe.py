@@ -8,6 +8,7 @@ from os import path
 
 class Game:
 
+
     def __init__(self):
         # inicializa o jogo
         pg.init()
@@ -203,17 +204,22 @@ class Game:
         for plat in self.plataformas_movendo_direita:
             plat.rect.right += self.velocidade_plat
             if plat.rect.left > WIDTH:
-                plat.rect.right = 0
-                if plat.rect.colliderect(self.jogador.rect):  # por que nunca entra?
-                    print('hm')
-                    self.jogador.pos.x = plat.rect.left + posicao_jogador_plataforma #ENTROOOOOU MAS DEU ERRO, ESTAVA CAINDO
-            else:
-                posicao_jogador_plataforma = plat.rect.left - self.jogador.pos.x
+                if plat.rect.colliderect(self.jogador.rect):
+                    posicao_jogador_plataforma =  self.jogador.pos.x - plat.rect.left
+                    plat.rect.right = 0
+                    self.jogador.pos.x = plat.rect.left + posicao_jogador_plataforma
+                else:
+                    plat.rect.right = 0
         # esquerda
         for plat in self.plataformas_movendo_esquerda:
             plat.rect.left -= self.velocidade_plat
             if plat.rect.left < plat.rect.size[0] * -1:
-                plat.rect.right = WIDTH + plat.rect.size[0]
+                if plat.rect.colliderect(self.jogador.rect):
+                    posicao_jogador_plataforma =  self.jogador.pos.x - plat.rect.left
+                    plat.rect.right = WIDTH + plat.rect.size[0]
+                    self.jogador.pos.x = plat.rect.left + posicao_jogador_plataforma
+                else:
+                    plat.rect.right = WIDTH + plat.rect.size[0]
 
 
     def configurar_fases(self):

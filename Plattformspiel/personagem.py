@@ -26,7 +26,10 @@ class Jogador(pg.sprite.Sprite):
         self.direita = True
         self.carregar_imagens()
 
+
     def update(self):
+
+        self.rect.midbottom = self.pos
 
         self.animar()
         self.acc = vec(0, self.gravidade)
@@ -61,6 +64,7 @@ class Jogador(pg.sprite.Sprite):
 
         self.rect.midbottom = self.pos
 
+
     def pular(self):
 
         if not self.vel.y: # se 0, verdadeiro
@@ -68,11 +72,13 @@ class Jogador(pg.sprite.Sprite):
             self.pulando = True
             self.vel.y = -PULO_JOGADOR
 
+
     def interromper_pulo(self):
 
         if self.pulando:
             if self.vel.y < -3:
                 self.vel.y = -3
+
 
     def carregar_imagens(self):
 
@@ -97,6 +103,7 @@ class Jogador(pg.sprite.Sprite):
 
         self.frame_cair_l = self.frame_esquerda[5]
         self.frame_cair_r = self.frame_direita[5]
+
 
     def animar(self):
 
