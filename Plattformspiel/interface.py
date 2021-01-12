@@ -1,7 +1,8 @@
 import pygame as pg
 from jogo_classe import Game
 from configuracoes import *
-from sprites import *
+from objetos import Botao
+from os import path
 
 
 class Interface_Game(Game):
