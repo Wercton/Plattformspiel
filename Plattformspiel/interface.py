@@ -2,7 +2,7 @@ import pygame as pg
 from jogo_classe import Game
 from configuracoes import *
 from sprites import *
-
+from os import path
 
 class Interface_Game(Game):
 

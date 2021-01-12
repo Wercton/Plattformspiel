@@ -84,6 +84,8 @@ NYAH1 = "imagens/nyah.png"
 NYAH2 = "imagens/nyah2.png"
 BOTAO = "imagens/botao.png"
 BOTAO_SELECIONADO = "imagens/botao_selecionado.png"
+SHINY_STAR1 = "imagens/shiny_star_1.png"
+SHINY_STAR2 = "imagens/shiny_star_2.png"
 
 # audio
 CLICK = "click.ogg"
