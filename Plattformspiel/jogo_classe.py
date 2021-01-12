@@ -2,8 +2,8 @@ import pygame as pg
 import random
 from configuracoes import *
 from personagem import *
-from sprites import *
 from os import path
+from objetos import *
 
 
 class Game:
@@ -183,12 +183,12 @@ class Game:
             if self.fase < 4:
                 if random.randrange(100) < 3:
                     Nuvem(self, self.fase)
-            #else:
-            if random.randrange(100) < 2:
-                agora = pg.time.get_ticks()
-                if agora - self.ultima_mudanca > 6000:
-                    self.ultima_mudanca = agora
-                    Star(self)
+            else:
+                if random.randrange(100) < 2:
+                    agora = pg.time.get_ticks()
+                    if agora - self.ultima_mudanca > 6000:
+                        self.ultima_mudanca = agora
+                        Star(self)
             self.jogador.pos.y += abs(self.jogador.vel.y)
             for star in self.stars:
                 star.rect.y += abs(self.jogador.vel.y / 6)
@@ -205,8 +205,8 @@ class Game:
                     pltfrms.kill()
                     self.pontos += 10
                     if self.BG_COR[1] > 3:
-                        self.BG_COR[1] -= 5.5  # 1.5
-                        self.BG_COR[2] -= 5.5
+                        self.BG_COR[1] -= 1.5  # 1.5
+                        self.BG_COR[2] -= 1.5
 
 
     def movimentar_plataformas(self):
@@ -233,18 +233,18 @@ class Game:
 
 
     def configurar_fases(self):
-        if self.pontos == 100:  # 800
+        if self.pontos == 800:  # 800
             self.fase = 4
             self.velocidade_plat = 3
             self.soundtrack.fadeout(3000)
             self.canal_musica.play(self.soundtrack_final, loops = -1)
             self.jogador.gravidade = 0.6
             self.prob_plat_movimento = 0.5
-        elif self.pontos == 20:  # 500
+        elif self.pontos == 500:  # 500
             self.fase = 3
             self.velocidade_plat = 2
             self.prob_plat_movimento = 0.3
-        elif self.pontos == 10:  # 200
+        elif self.pontos == 200:  # 200
             self.fase = 2
             self.velocidade_plat = 0
 
