@@ -38,6 +38,7 @@ class Game:
         self.canal_musica.play(self.soundtrack, loops = -1)
 
         self.game_over = False
+        self.pisou = False  # verifica se zerou o jogo
 
         self.sprites_geral = pg.sprite.LayeredUpdates()
         self.plataformas = pg.sprite.Group()
@@ -57,6 +58,7 @@ class Game:
         self.ultima_mudanca = 0
         self.tem_cometa = 0
         self.tem_carro = 0
+        self.final = 0
 
         self.jogador_spritesheet = random.choice(self.jogadores_spritesheets)
         self.jogador = Jogador(self)
@@ -94,7 +96,13 @@ class Game:
             if not self.pontos % 100:
                 self.configurar_fases()
 
-            self.spawnar()
+            if not self.final:
+                self.spawnar()
+            else:
+                self.jogador.vel.y -= 1
+                if self.jogador.rect.y < -50:
+                    self.pisou = 1
+                    self.partida = 0
 
 
     def eventos(self):
@@ -106,13 +114,15 @@ class Game:
                 self.menu = False
             elif event.type == pg.KEYDOWN:
                 if event.key == pg.K_SPACE:
-                    self.jogador.pular()
+                    if not self.final:
+                        self.jogador.pular()
                 elif event.key == pg.K_ESCAPE:
                     self.partida = False
                     self.menu = True
             elif event.type == pg.KEYUP:
                 if event.key == pg.K_SPACE:
-                    self.jogador.interromper_pulo()
+                    if not self.final:
+                        self.jogador.interromper_pulo()
 
 
     def draw(self):
@@ -238,8 +248,12 @@ class Game:
 
 
     def configurar_fases(self):
-           
-        if self.pontos == 1200:
+        
+        if self.pontos == 1300:
+            self.jogador.gravidade = 0
+            self.jogador.pulando = 1
+            self.final = 1
+        elif self.pontos == 1200:
             if not self.tem_carro:
                 Astronaut(self)
                 self.tem_carro = 1
@@ -269,7 +283,7 @@ class Game:
         if agora - self.tempo_mob > FREQUENCIA_MOB:
             self.tempo_mob = agora
             if random.random() < PROBABILICADE_MOB:
-                # Mob(self)
+                Mob(self)
                 pass
 
         # spawnando plataformas

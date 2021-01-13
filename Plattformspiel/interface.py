@@ -14,6 +14,8 @@ class Interface_Game(Game):
             self.novo()
             if self.game_over:
                 self.tela_saida()
+            if self.pisou:
+                self.animacao_final()
             if self.menu:
                 self.tela_inicial()
 
@@ -242,6 +244,34 @@ class Interface_Game(Game):
             pg.display.flip()
 
         self.audio_gameover.fadeout(1000)
+
+
+    def animacao_final(self):
+        self.decidindo = True
+        self.botao_selecionado = 0
+        self.botao_jogar_novamente = Botao(self, 350, "NOVAMENTE", True)
+        self.botao_menu = Botao(self, 415, "MENU", False)
+        self.botoes = [self.botao_jogar_novamente, self.botao_menu]
+        
+        if self.recorde < self.pontos:
+            with open(path.join(self.dir, RECORDE_FILE), 'w') as f:
+                f.write(str(self.pontos))
+                
+        while self.decidindo:
+            
+            self.tela.fill(BLACK)
+            
+            for botao in self.botoes:
+                botao.update()
+                
+            self.draw_texto('PARABÉNS!', 20, WHITE, CENTRO_WIDTH, HEIGHT/2 - 40)
+            self.draw_texto('Graças a você, Pipipopo realizou', 18, WHITE, CENTRO_WIDTH, HEIGHT/2 + 0)
+            self.draw_texto('seu sonho de acender no Cosmos.', 18, WHITE, CENTRO_WIDTH, HEIGHT/2 + 20)
+            self.draw_texto('See you in space, cowboy ;)', 18, WHITE, CENTRO_WIDTH, HEIGHT/2 + 40)
+            
+            self.tela_saida_eventos()
+
+            pg.display.flip()
 
 
     def tela_saida_eventos(self):
