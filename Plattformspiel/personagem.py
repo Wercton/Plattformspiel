@@ -50,7 +50,8 @@ class Jogador(pg.sprite.Sprite):
         # aplica fricção
         self.acc.x += self.vel.x * FRICCAO_JOGADOR  # definido no x para não atrapalhar gravidade
         # equação de movimento
-        self.vel += self.acc
+        if self.vel.y < 15:
+            self.vel += self.acc
         if abs(self.vel.x) < 0.6:  # consertando bug no sprite que sempre andava
             self.vel.x = 0
         self.pos += self.vel + ACC_JOGADOR * self.acc
@@ -78,6 +79,10 @@ class Jogador(pg.sprite.Sprite):
         if self.pulando:
             if self.vel.y < -3:
                 self.vel.y = -3
+
+
+    def interromper_queda(self):
+        self.vel.y = 0
 
 
     def carregar_imagens(self):

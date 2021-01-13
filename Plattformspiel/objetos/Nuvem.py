@@ -38,6 +38,7 @@ class Nuvem(pg.sprite.Sprite):
         self.rect.y = random.randrange(-500, -50)
 
     def update(self):
+        
         if self.rect.top > HEIGHT:
             self.kill()
         if self.frente:

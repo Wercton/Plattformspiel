@@ -88,6 +88,7 @@ SHINY_STAR1 = "imagens/shiny_star_1.png"
 SHINY_STAR2 = "imagens/shiny_star_2.png"
 COMETA1 = "imagens/comet1.png"
 COMETA2 = "imagens/comet2.png"
+SPACEX_CARRO = "imagens/spacex_car.png"
 
 # audio
 CLICK = "click.ogg"

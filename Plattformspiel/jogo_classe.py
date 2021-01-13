@@ -47,6 +47,7 @@ class Game:
         self.poderes = pg.sprite.Group()
         self.nuvens = pg.sprite.Group()
         self.stars = pg.sprite.Group()
+        self.cometa = pg.sprite.Group()
 
         self.pontos = 0
         self.fase = 1
@@ -54,13 +55,15 @@ class Game:
         self.prob_plat_movimento = 0
         self.tempo_mob = 0
         self.ultima_mudanca = 0
+        self.tem_cometa = 0
+        self.tem_carro = 0
 
         self.jogador_spritesheet = random.choice(self.jogadores_spritesheets)
         self.jogador = Jogador(self)
 
-        p = Plataforma(self, -20, HEIGHT - 15, -1)
+        Plataforma(self, -20, HEIGHT - 15, -1)
 
-        for i in range(3):
+        for _ in range(3):
             c = Nuvem(self, self.fase)
             c.rect.y += 400
 
@@ -87,7 +90,7 @@ class Game:
 
             self.subir_tela()  # muda as cores também
             self.movimentar_plataformas()  # aumentar precisão
-
+            
             if not self.pontos % 100:
                 self.configurar_fases()
 
@@ -141,8 +144,8 @@ class Game:
                 self.jogador.rect.x > hit.rect.left - 35:  # cai quando as duas perninhas dele sai da plataforma
                     if self.jogador.pos.y - 5 <= hit.rect.bottom - 2:  # corrigindo bug de transportar para o topo sem alcançar
                         self.jogador.pos.y = hit.rect.top + 1
-                        self.jogador.vel.y = 0
                         self.jogador.pulando = False
+                        self.jogador.interromper_queda()
                 # se move junto com a plataforma
                 if hit in self.plataformas_movendo_direita:
                     self.jogador.pos.x += self.velocidade_plat
@@ -192,6 +195,8 @@ class Game:
             self.jogador.pos.y += abs(self.jogador.vel.y)
             for star in self.stars:
                 star.rect.y += abs(self.jogador.vel.y / 6)
+            for spaceObject in self.cometa:
+                spaceObject.rect.y += abs(self.jogador.vel.y / 8)
             for nuvem in self.nuvens:
                 if nuvem.frente:
                     nuvem.rect.y += abs(self.jogador.vel.y * 1.2)
@@ -207,7 +212,7 @@ class Game:
                     if self.BG_COR[1] > 3:
                         self.BG_COR[1] -= 1.5  # 1.5
                         self.BG_COR[2] -= 1.5
-
+    
 
     def movimentar_plataformas(self):
         # direita
@@ -233,7 +238,16 @@ class Game:
 
 
     def configurar_fases(self):
-        if self.pontos == 800:  # 800
+           
+        if self.pontos == 1200:
+            if not self.tem_carro:
+                Astronaut(self)
+                self.tem_carro = 1
+        elif self.pontos == 1000:
+            if not self.tem_cometa:
+                Cometa(self)
+                self.tem_cometa = 1
+        elif self.pontos == 800:  # 800
             self.fase = 4
             self.velocidade_plat = 3
             self.soundtrack.fadeout(3000)
@@ -255,7 +269,8 @@ class Game:
         if agora - self.tempo_mob > FREQUENCIA_MOB:
             self.tempo_mob = agora
             if random.random() < PROBABILICADE_MOB:
-                Mob(self)
+                # Mob(self)
+                pass
 
         # spawnando plataformas
         while len(self.plataformas) < 5:
