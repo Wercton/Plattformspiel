@@ -15,10 +15,11 @@ Este é um repositório para os jogos que produzi usando a biblioteca do Python,
  ---
  
  ### Plattformspiel
- <a href="https://github.com/Wercton/My-PyGames/tree/master/Plattformspiel"><img src="./Plattformspiel/printscreen/printscreen1.png" width="400px" /></a>
+ <a href="https://github.com/Wercton/My-PyGames/tree/master/Plattformspiel"><img src="./Plattformspiel/data/printscreen/printscreen1.png" width="400px" /></a>
  
 **Sobre**:  
-O objetivo deste jogo é ajudar o jovem Pipipopo a chegar no topo da Montanha por meio da escalada de plataformas.
+O objetivo deste jogo é ajudar o jovem Pipipopo a chegar no topo da Montanha por meio da escalada de plataformas.  
+Você pode baixar o executável desse jogo tanto para Windows quanto para Linux clicando [aqui](https://wercton.itch.io/plattformspiel).
   
  ---
  
