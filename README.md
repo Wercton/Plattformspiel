@@ -27,7 +27,7 @@ Você pode baixar o executável desse jogo tanto para Windows quanto para Linux 
 <a href="https://github.com/Wercton/My-PyGames/tree/master/punch-the-clown"><img src="https://i.ibb.co/7tC8tJn/soco-no-fascista-exemplo1.png" width="400px" /></a>
  
 **Sobre**:  
-O objetivo deste jogo é socar o personagem fictício 40 vezes seguidas e, consequentemente, salvar o Brasil. A cada acerto o personagem se move mais rapidamente.  
+O objetivo deste jogo é socar um personagem fictício 40 vezes seguidas e, consequentemente, salvar o Brasil. A cada acerto o personagem se move mais rapidamente.  
   
 **A ser implementado:**
 - [X] adicionar efeitos sonoros
