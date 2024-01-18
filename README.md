@@ -7,11 +7,6 @@
 [![GitHub last commit](https://img.shields.io/github/last-commit/Wercton/My-PyGames?color=blue)](https://github.com/Wercton/My-PyGames) 
 [![GitHub stars](https://img.shields.io/github/stars/Wercton/My-PyGames?color=green)](https://github.com/Wercton/My-PyGames)
 
-Este é um repositório para os jogos que produzi usando a biblioteca do Python, `pygame`.
-
-- [Plattformspiel](https://github.com/Wercton/My-PyGames/tree/master/Plattformspiel)
-- [Soco no Fascista](https://github.com/Wercton/My-PyGames/tree/master/punch-the-clown)
-
  ---
  
  ### Plattformspiel
@@ -23,13 +18,3 @@ Você pode baixar o executável desse jogo tanto para Windows quanto para Linux 
   
  ---
  
- ### Soco no Fascista
-<a href="https://github.com/Wercton/My-PyGames/tree/master/punch-the-clown"><img src="https://i.ibb.co/7tC8tJn/soco-no-fascista-exemplo1.png" width="400px" /></a>
- 
-**Sobre**:  
-O objetivo deste jogo é socar um personagem fictício 40 vezes seguidas e, consequentemente, salvar o Brasil. A cada acerto o personagem se move mais rapidamente.  
-  
-**A ser implementado:**
-- [X] adicionar efeitos sonoros
-- [ ] disponibilizar executável
-- [ ] adicionar skins para substituir o punho (solicitado pelo usuário [@MateusRosario](https://github.com/MateusRosario))
