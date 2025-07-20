@@ -26,7 +26,7 @@ class Mob(pg.sprite.Sprite):
         if self.rect.centerx > WIDTH:
             self.imagens = self.imagem_esquerda
             self.velx *= -1
-        self.rect.y = random.randrange(HEIGHT / -3, HEIGHT / 3)
+        self.rect.y = random.randrange(int(HEIGHT / -3), int(HEIGHT / 3))
         self.accy = 0.8  # aceleração para o y
 
         Atencao(self.game, self)

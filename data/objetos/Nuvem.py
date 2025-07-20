@@ -34,7 +34,7 @@ class Nuvem(pg.sprite.Sprite):
         if self.frente:
             self.rect.x = -self.rect.width
         else:
-            self.rect.x = random.randrange(WIDTH - self.rect.width)
+            self.rect.x = random.randrange(int(WIDTH - self.rect.width))
         self.rect.y = random.randrange(-500, -50)
 
     def update(self):

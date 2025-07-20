@@ -307,8 +307,12 @@ class Game:
                 self.mais_alto = mais_alto - HEIGHT//2.2
                 self.mais_baixo = mais_alto - HEIGHT//2.6
 
-            p = Plataforma(self, random.randrange(0, WIDTH),
-                        random.randrange(self.mais_alto, self.mais_baixo), self.fase)
+            p = Plataforma(
+                self,
+                random.randrange(0, WIDTH),
+                random.randrange(int(self.mais_alto), int(self.mais_baixo)),
+                self.fase
+            )
 
             if p.rect.centerx > WIDTH - p.rect.width//2:
                 p.rect.centerx = WIDTH - p.rect.width//2
