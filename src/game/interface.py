@@ -27,14 +27,37 @@ class Interface_Game(Game):
         texto_rect.midtop = (x, y)
         self.tela.blit(texto_surface, texto_rect)
 
-    def tela_inicial(self):
+    def draw_titulo_moderno(self, texto, x, y):
+        fonte = pg.font.Font(self.fonte_texto, 34)
+        # Sombra
+        sombra_surface = fonte.render(texto, True, (40, 40, 60))
+        sombra_rect = sombra_surface.get_rect(center=(x + 4, y + 4))
+        self.tela.blit(sombra_surface, sombra_rect)
+        # Título principal
+        titulo_surface = fonte.render(texto, True, (138, 43, 226))
+        titulo_rect = titulo_surface.get_rect(center=(x, y))
+        self.tela.blit(titulo_surface, titulo_rect)
+        # Borda branca leve (deslocada, sem blend)
+        borda_surface = fonte.render(texto, True, (255, 255, 255))
+        borda_rect = borda_surface.get_rect(center=(x - 2, y - 2))
+        self.tela.blit(borda_surface, borda_rect)
 
+    def tela_inicial(self):
         pg.mixer.fadeout(1000)
         self.decidindo = True
         self.botao_selecionado = 0
-        self.botao_jogar = Botao(self, 125, "JOGAR", True)
-        self.botao_opcoes = Botao(self, 200, "OPÇÕES")
-        self.botao_sair = Botao(self, 275, "SAIR")
+
+        # Parâmetros para centralização
+        num_botoes = 3
+        altura_botao = 50
+        espacamento = 30
+        bloco_altura = num_botoes * altura_botao + (num_botoes - 1) * espacamento
+        bloco_topo = (HEIGHT // 2) - (bloco_altura // 2) + 40  # +40 para dar espaço ao título
+
+        # Criação dos botões centralizados verticalmente
+        self.botao_jogar = Botao(self, bloco_topo, "JOGAR", True)
+        self.botao_opcoes = Botao(self, bloco_topo + altura_botao + espacamento, "OPÇÕES")
+        self.botao_sair = Botao(self, bloco_topo + 2 * (altura_botao + espacamento), "SAIR")
         self.botoes = [self.botao_jogar, self.botao_opcoes, self.botao_sair]
         self.opcoes = False
 
@@ -43,8 +66,7 @@ class Interface_Game(Game):
         while self.decidindo:
             self.tela.fill(BG_COR)
             self.animar_neve(flocos)
-
-            self.draw_texto(TITLE, 30, WHITE, 185, 20)
+            self.draw_titulo_moderno(TITLE, CENTRO_WIDTH, 60)
 
             for botao in self.botoes:
                 botao.update()
@@ -91,23 +113,17 @@ class Interface_Game(Game):
     def tela_opcoes(self, flocos=None):
         self.botao_selecionado = 0
 
-        if self.audio:
-            self.botao_audio = Botao(self, 125, "AUDIO ON", True)
-        else:
-            self.botao_audio = Botao(self, 125, "AUDIO OFF", True)
+        num_botoes = 4
+        altura_botao = 50
+        espacamento = 30
+        bloco_altura = num_botoes * altura_botao + (num_botoes - 1) * espacamento
+        bloco_topo = (HEIGHT // 2) - (bloco_altura // 2) + 40  # +40 para dar espaço ao título
 
-        if self.audio_efeitos:
-            self.botao_efeitos = Botao(self, 200, "EFEITOS ON", False)
-        else:
-            self.botao_efeitos = Botao(self, 200, "EFEITOS OFF", False)
-
-        if self.sorte:
-            self.botao_sorte = Botao(self, 275, "SORTE ON", False)
-        else:
-            self.botao_sorte = Botao(self, 275, "SORTE OFF", False)
-
-        self.botao_retornar = Botao(self, 350, "RETORNAR", False)
-
+        # Criação dos botões centralizados verticalmente
+        self.botao_audio = Botao(self, bloco_topo, "AUDIO ON" if self.audio else "AUDIO OFF", True)
+        self.botao_efeitos = Botao(self, bloco_topo + altura_botao + espacamento, "EFEITOS ON" if self.audio_efeitos else "EFEITOS OFF")
+        self.botao_sorte = Botao(self, bloco_topo + 2 * (altura_botao + espacamento), "SORTE ON" if self.sorte else "SORTE OFF")
+        self.botao_retornar = Botao(self, bloco_topo + 3 * (altura_botao + espacamento), "RETORNAR")
         self.botoes_opcoes = [
             self.botao_audio,
             self.botao_efeitos,
@@ -116,18 +132,16 @@ class Interface_Game(Game):
         ]
 
         while self.opcoes:
-
             self.tela.fill(BG_COR)
             if flocos:
                 self.animar_neve(flocos)
 
-            self.draw_texto("OPÇÕES", 30, WHITE, 185, 20)
+            self.draw_titulo_moderno("OPÇÕES", CENTRO_WIDTH, 60)
 
             for botao in self.botoes_opcoes:
                 botao.update()
 
             self.tela_opcoes_eventos()
-
             pg.display.flip()
 
     def tela_opcoes_eventos(self):
@@ -194,80 +208,77 @@ class Interface_Game(Game):
                     self.botao_selecionado = 1  # but why?
 
     def tela_saida(self):
-
         pg.mixer.fadeout(1000)
         self.canal_musica.play(self.audio_gameover, loops=-1)
         self.decidindo = True
         self.botao_selecionado = 0
-        self.botao_tentar_novamente = Botao(self, 350, "NOVAMENTE", True)
-        self.botao_menu = Botao(self, 415, "MENU", False)
-        self.botoes = [self.botao_tentar_novamente, self.botao_menu]
 
-        if self.recorde < self.pontos:
-            self.recorde = self.pontos
-            texto_recorde = "Novo recorde: " + str(self.recorde) + "!"
-            self.draw_texto(texto_recorde, 40, WHITE, CENTRO_WIDTH, HEIGHT / 4 + 20)
-            with open(RECORDE_FILE, "w") as f:
-                f.write(str(self.pontos))
-        else:
-            texto_pontucao = "Pontuação: " + str(self.pontos)
-            texto_recorde = "Recorde: " + str(self.recorde)
-            self.draw_texto(texto_pontucao, 30, WHITE, CENTRO_WIDTH, HEIGHT / 4)
-            self.draw_texto(texto_recorde, 20, WHITE, CENTRO_WIDTH, HEIGHT / 4 + 45)
+        altura_botao = 50
+        espacamento = 30
+        num_botoes = 2
+
+        caixa_largura = 300
+        caixa_altura = 130
+        caixa_x = (WIDTH - caixa_largura) // 2
+        caixa_y = (HEIGHT - caixa_altura - 54 - (num_botoes * altura_botao + espacamento)) // 2 + 54
+
+        bloco_topo = caixa_y + caixa_altura + 32
+
+        self.botao_tentar_novamente = Botao(self, bloco_topo, "NOVAMENTE", True)
+        self.botao_menu = Botao(self, bloco_topo + altura_botao + espacamento, "MENU", False)
+        self.botoes = [self.botao_tentar_novamente, self.botao_menu]
 
         flocos = [[random.randint(0, WIDTH), random.randint(0, HEIGHT), random.randint(2, 4)] for _ in range(5)]
 
+        texto_gameover = "GAME OVER"
+        texto_motiva = "Continue tentando!\nPipipopo acredita em você."
+        if self.recorde < self.pontos:
+            self.recorde = self.pontos
+            texto_recorde = f"Novo recorde: {self.recorde}!"
+            with open(RECORDE_FILE, "w") as f:
+                f.write(str(self.pontos))
+        else:
+            texto_recorde = f"Recorde: {self.recorde}"
+        texto_pontuacao = f"Pontuação: {self.pontos}"
+
         while self.decidindo:
-            self.tela.fill(self.BG_COR)
+            self.tela.fill(BG_COR)
             self.animar_neve(flocos)
+
+            self.draw_titulo_moderno(texto_gameover, CENTRO_WIDTH, 38)
+
+            caixa_rect = pg.Rect(caixa_x, caixa_y, caixa_largura, caixa_altura)
+            sombra_rect = caixa_rect.copy()
+            sombra_rect.y += 8
+            pg.draw.rect(self.tela, (30, 30, 50), sombra_rect, border_radius=22)
+            pg.draw.rect(self.tela, (50, 60, 100), caixa_rect, border_radius=22)
+            pg.draw.rect(self.tela, (200, 200, 255), caixa_rect, width=2, border_radius=22)
+
+            padding_top = 18
+            padding_bottom = 18
+            linha_y = caixa_y + padding_top
+
+            fonte = pg.font.Font(self.fonte_texto, 22)
+            pont_surface = fonte.render(texto_pontuacao, True, (255, 255, 255))
+            pont_rect = pont_surface.get_rect(center=(CENTRO_WIDTH, linha_y))
+            self.tela.blit(pont_surface, pont_rect)
+
+            linha_y += 28
+            rec_surface = fonte.render(texto_recorde, True, (255, 223, 0))
+            rec_rect = rec_surface.get_rect(center=(CENTRO_WIDTH, linha_y))
+            self.tela.blit(rec_surface, rec_rect)
+
+            linha_y += 28
+            fonte_menor = pg.font.Font(self.fonte_texto, 16)
+            for i, linha in enumerate(texto_motiva.split('\n')):
+                msg_surface = fonte_menor.render(linha, True, (220, 220, 255))
+                msg_rect = msg_surface.get_rect(center=(CENTRO_WIDTH, linha_y + i * 22))
+                self.tela.blit(msg_surface, msg_rect)
 
             for botao in self.botoes:
                 botao.update()
 
-            if self.recorde < self.pontos:
-                self.recorde = self.pontos
-                texto_recorde = "Novo recorde: " + str(self.recorde) + "!"
-                self.draw_texto(texto_recorde, 40, WHITE, CENTRO_WIDTH, HEIGHT / 4 + 20)
-                with open(RECORDE_FILE, "w") as f:
-                    f.write(str(self.pontos))
-            else:
-                texto_pontucao = "Pontuação: " + str(self.pontos)
-                texto_recorde = "Recorde: " + str(self.recorde)
-                self.draw_texto(
-                    texto_pontucao, 30, WHITE, CENTRO_WIDTH, HEIGHT / 4 - 20
-                )
-                self.draw_texto(texto_recorde, 20, WHITE, CENTRO_WIDTH, HEIGHT / 4 + 25)
-
-            self.draw_texto(
-                "Não foi dessa vez! :(", 20, BLACK, CENTRO_WIDTH, HEIGHT / 2 - 40
-            )
-            self.draw_texto(
-                "Mas não se procupe, não será uma",
-                18,
-                BLACK,
-                CENTRO_WIDTH,
-                HEIGHT / 2 + 0,
-            )
-            self.draw_texto(
-                '"quedinha" que desmotivará Pipipopo.',
-                18,
-                BLACK,
-                CENTRO_WIDTH,
-                HEIGHT / 2 + 20,
-            )
-            self.draw_texto(
-                "Ele passa bem e está pronto para",
-                18,
-                BLACK,
-                CENTRO_WIDTH,
-                HEIGHT / 2 + 40,
-            )
-            self.draw_texto(
-                "tentar outra vez!", 18, BLACK, CENTRO_WIDTH, HEIGHT / 2 + 60
-            )
-
             self.tela_saida_eventos()
-
             pg.display.flip()
 
         self.audio_gameover.fadeout(1000)
