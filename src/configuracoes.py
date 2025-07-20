@@ -1,11 +1,11 @@
 # opções de jogo
-TITLE = 'Plattformspiel'
+TITLE = "Plattformspiel"
 WIDTH = 360
 HEIGHT = 480
-CENTRO_WIDTH = WIDTH/2
+CENTRO_WIDTH = WIDTH / 2
 FPS = 30
-FONTE_TEXTO = 'ubuntumono' # freemono, arial, freeserif, ubuntumono
-RECORDE_FILE = '.recorde.txt'
+FONTE_TEXTO = "ubuntumono"  # freemono, arial, freeserif, ubuntumono
+RECORDE_FILE = ".recorde.txt"
 
 # cores
 WHITE = (255, 255, 255)
@@ -35,7 +35,7 @@ LAYER_SISTEMA = 5
 
 # sprites - Jogador
 TAMANHO_JOGADOR = (40, 40)
-POSICAO_INICIAL = (TAMANHO_JOGADOR[0], HEIGHT - TAMANHO_JOGADOR[1]/2)
+POSICAO_INICIAL = (TAMANHO_JOGADOR[0], HEIGHT - TAMANHO_JOGADOR[1] / 2)
 PULO_JOGADOR = 17
 
 JOGADOR_SPRITESHEET_BLUE = "assets/imagens/PipipopoSpritesheet.png"
@@ -53,7 +53,7 @@ PLATAFORMA_FASE1 = [
     "assets/imagens/Plataforma_100_terra2.png",
     "assets/imagens/Plataforma_100_terra3.png",
     "assets/imagens/Plataforma_100_terra4.png",
-    "assets/imagens/Plataforma_70_terra5.png"
+    "assets/imagens/Plataforma_70_terra5.png",
 ]
 
 PLATAFORMA_FASE2 = [
@@ -61,19 +61,19 @@ PLATAFORMA_FASE2 = [
     "assets/imagens/Plataforma_80_fase2_2.png",
     "assets/imagens/Plataforma_60_fase2_3.png",
     "assets/imagens/Plataforma_60_fase2_4.png",
-    "assets/imagens/Plataforma_70_fase2_5.png"
+    "assets/imagens/Plataforma_70_fase2_5.png",
 ]
 
 PLATAFORMA_FASE3 = [
     "assets/imagens/Plataforma_60_fase3_1.png",
     "assets/imagens/Plataforma_40_fase3_3.png",
     "assets/imagens/Plataforma_60_fase3_4.png",
-    "assets/imagens/Plataforma_60_fase3_5.png"
+    "assets/imagens/Plataforma_60_fase3_5.png",
 ]
 
 PLATAFORMA_FASE4 = [
     "assets/imagens/Plataforma_45_fase4.png",
-    "assets/imagens/Plataforma_30_fase4_2.png"
+    "assets/imagens/Plataforma_30_fase4_2.png",
 ]
 
 PLATAFORMA_RARA = "assets/imagens/Plataforma_60_fase3_2.png"
@@ -81,7 +81,7 @@ PLATAFORMA_RARA = "assets/imagens/Plataforma_60_fase3_2.png"
 ASTEROIDES = [
     "assets/imagens/Plataforma_50_asteroide.png",
     "assets/imagens/Plataforma_50_asteroide_2.png",
-    "assets/imagens/Plataforma_50_asteroide_3.png"
+    "assets/imagens/Plataforma_50_asteroide_3.png",
 ]
 
 # outros sprites

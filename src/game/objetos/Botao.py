@@ -1,5 +1,11 @@
 import pygame as pg
-from src.configuracoes import BOTAO, BOTAO_SELECIONADO, LAYER_SISTEMA, CENTRO_WIDTH, BLACK
+from src.configuracoes import (
+    BOTAO,
+    BOTAO_SELECIONADO,
+    LAYER_SISTEMA,
+    CENTRO_WIDTH,
+    BLACK,
+)
 
 
 class Botao(pg.sprite.Sprite):
@@ -21,13 +27,16 @@ class Botao(pg.sprite.Sprite):
         self.rect.y = y
 
         self.game.tela.blit(self.image, self.rect)
-        self.game.draw_texto(self.texto, 30, BLACK, self.rect.centerx, self.rect.centery - 15)
-
+        self.game.draw_texto(
+            self.texto, 30, BLACK, self.rect.centerx, self.rect.centery - 15
+        )
 
     def update(self):
 
         self.game.tela.blit(self.image, self.rect)
-        self.game.draw_texto(self.texto, 30, BLACK, self.rect.centerx, self.rect.centery - 15)
+        self.game.draw_texto(
+            self.texto, 30, BLACK, self.rect.centerx, self.rect.centery - 15
+        )
 
     def selecionar(self):
 
@@ -55,4 +64,3 @@ class Botao(pg.sprite.Sprite):
     def mudar_texto(self, novo_texto):
 
         self.texto = novo_texto
-        

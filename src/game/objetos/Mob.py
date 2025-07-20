@@ -16,7 +16,10 @@ class Mob(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.rect.centerx = random.choice([-85, WIDTH + 85])
         self.imagem_esquerda = [pg.image.load(NYAH1), pg.image.load(NYAH2)]
-        self.imagem_direita = [pg.transform.flip(self.imagem_esquerda[0], True, False), pg.transform.flip(self.imagem_esquerda[1], True, False)]
+        self.imagem_direita = [
+            pg.transform.flip(self.imagem_esquerda[0], True, False),
+            pg.transform.flip(self.imagem_esquerda[1], True, False),
+        ]
         self.imagens = self.imagem_direita
         self.ultima_mudanca = 0
         self.frame_atual = 0
@@ -74,7 +77,7 @@ class Atencao(pg.sprite.Sprite):
 
     def update(self):
 
-        if self.mob.rect.centerx < - self.mob.rect.width // 2:
+        if self.mob.rect.centerx < -self.mob.rect.width // 2:
             self.rect.x = 10
         elif self.mob.rect.centerx > WIDTH + self.mob.rect.width // 2:
             self.rect.x = WIDTH - 10

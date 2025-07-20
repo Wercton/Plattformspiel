@@ -11,7 +11,7 @@ class Poder(pg.sprite.Sprite):
         pg.sprite.Sprite.__init__(self, self.grupos)
         self.game = game
         self.plat = plat
-        self.tipo = random.choice(['impulso'])
+        self.tipo = random.choice(["impulso"])
         self.image = pg.image.load(FOGUETÃO)
         self.rect = self.image.get_rect()
         self.rect.centerx = self.plat.rect.centerx

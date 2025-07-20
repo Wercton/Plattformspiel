@@ -1,7 +1,16 @@
 import pygame as pg
 import random
 from src.game.objetos import Poder
-from src.configuracoes import LAYER_PLATAFORMA, PLATAFORMA_FASE1, PLATAFORMA_FASE2, PLATAFORMA_FASE3, PLATAFORMA_FASE4, PLATAFORMA_INICIAL, PLATAFORMA_RARA, ASTEROIDES
+from src.configuracoes import (
+    LAYER_PLATAFORMA,
+    PLATAFORMA_FASE1,
+    PLATAFORMA_FASE2,
+    PLATAFORMA_FASE3,
+    PLATAFORMA_FASE4,
+    PLATAFORMA_INICIAL,
+    PLATAFORMA_RARA,
+    ASTEROIDES,
+)
 
 
 class Plataforma(pg.sprite.Sprite):

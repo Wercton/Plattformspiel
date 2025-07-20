@@ -4,6 +4,7 @@ from src.configuracoes import *
 
 vec = pg.math.Vector2
 
+
 class Jogador(pg.sprite.Sprite):
 
     def __init__(self, game):
@@ -11,9 +12,12 @@ class Jogador(pg.sprite.Sprite):
         self.grupos = game.sprites_geral
         pg.sprite.Sprite.__init__(self, self.grupos)
         self.game = game
-        self.image = pg.transform.scale(self.game.jogador_spritesheet.selecionar_imagem(0, 0, 46, 50), TAMANHO_JOGADOR)
+        self.image = pg.transform.scale(
+            self.game.jogador_spritesheet.selecionar_imagem(0, 0, 46, 50),
+            TAMANHO_JOGADOR,
+        )
         self.rect = self.image.get_rect()
-        self.rect.center = (POSICAO_INICIAL)
+        self.rect.center = POSICAO_INICIAL
         self.pos = vec(POSICAO_INICIAL)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
@@ -25,7 +29,6 @@ class Jogador(pg.sprite.Sprite):
         self.ultima_mudanca = 0
         self.direita = True
         self.carregar_imagens()
-
 
     def update(self):
 
@@ -46,9 +49,10 @@ class Jogador(pg.sprite.Sprite):
         else:
             self.andando = False
 
-
         # aplica fricção
-        self.acc.x += self.vel.x * FRICCAO_JOGADOR  # definido no x para não atrapalhar gravidade
+        self.acc.x += (
+            self.vel.x * FRICCAO_JOGADOR
+        )  # definido no x para não atrapalhar gravidade
         # equação de movimento
         if self.vel.y < 15:
             self.vel += self.acc
@@ -65,14 +69,12 @@ class Jogador(pg.sprite.Sprite):
 
         self.rect.midbottom = self.pos
 
-
     def pular(self):
 
-        if not self.vel.y: # se 0, verdadeiro
+        if not self.vel.y:  # se 0, verdadeiro
             self.game.canal_efeito.play(self.game.audio_pulo)
             self.pulando = True
             self.vel.y = -PULO_JOGADOR
-
 
     def interromper_pulo(self):
 
@@ -80,21 +82,29 @@ class Jogador(pg.sprite.Sprite):
             if self.vel.y < -3:
                 self.vel.y = -3
 
-
     def interromper_queda(self):
         self.vel.y = 0
-
 
     def carregar_imagens(self):
 
         self.frame_esquerda = []
         for i in range(6):
-            self.frame_esquerda.append(pg.transform.scale(self.game.jogador_spritesheet.selecionar_imagem(0, 50*i, 46, 50), TAMANHO_JOGADOR))
+            self.frame_esquerda.append(
+                pg.transform.scale(
+                    self.game.jogador_spritesheet.selecionar_imagem(0, 50 * i, 46, 50),
+                    TAMANHO_JOGADOR,
+                )
+            )
             self.frame_esquerda[i].set_colorkey(BLACK)
 
         self.frame_direita = []
         for i in range(6):
-            self.frame_direita.append(pg.transform.scale(self.game.jogador_spritesheet.selecionar_imagem(46, 50*i, 46, 50), TAMANHO_JOGADOR))
+            self.frame_direita.append(
+                pg.transform.scale(
+                    self.game.jogador_spritesheet.selecionar_imagem(46, 50 * i, 46, 50),
+                    TAMANHO_JOGADOR,
+                )
+            )
             self.frame_direita[i].set_colorkey(BLACK)
 
         self.frame_parado_l = [self.frame_esquerda[0], self.frame_esquerda[1]]
@@ -108,7 +118,6 @@ class Jogador(pg.sprite.Sprite):
 
         self.frame_cair_l = self.frame_esquerda[5]
         self.frame_cair_r = self.frame_direita[5]
-
 
     def animar(self):
 
@@ -128,20 +137,28 @@ class Jogador(pg.sprite.Sprite):
             if agora - self.ultima_mudanca > 150:
                 if self.direita:
                     self.ultima_mudanca = agora
-                    self.frame_atual = (self.frame_atual + 1) % len(self.frame_andar_r) # BOOOOM
+                    self.frame_atual = (self.frame_atual + 1) % len(
+                        self.frame_andar_r
+                    )  # BOOOOM
                     self.image = self.frame_andar_r[self.frame_atual]
                 else:
                     self.ultima_mudanca = agora
-                    self.frame_atual = (self.frame_atual + 1) % len(self.frame_andar_l) # BOOOOM
+                    self.frame_atual = (self.frame_atual + 1) % len(
+                        self.frame_andar_l
+                    )  # BOOOOM
                     self.image = self.frame_andar_l[self.frame_atual]
         elif not self.andando:  # parado
             if agora - self.ultima_mudanca > 300:
                 if self.direita:
                     self.ultima_mudanca = agora
-                    self.frame_atual = (self.frame_atual + 1) % len(self.frame_parado_r) # BOOOOM
+                    self.frame_atual = (self.frame_atual + 1) % len(
+                        self.frame_parado_r
+                    )  # BOOOOM
                     self.image = self.frame_parado_r[self.frame_atual]
                 else:
                     self.ultima_mudanca = agora
-                    self.frame_atual = (self.frame_atual + 1) % len(self.frame_parado_l) # BOOOOM
+                    self.frame_atual = (self.frame_atual + 1) % len(
+                        self.frame_parado_l
+                    )  # BOOOOM
                     self.image = self.frame_parado_l[self.frame_atual]
         self.mask = pg.mask.from_surface(self.image)

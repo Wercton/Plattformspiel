@@ -20,8 +20,12 @@ class Nuvem(pg.sprite.Sprite):
         self.nuvens_imagem = []
         width, height = 56, 23
         for i in range(4):
-            self.nuvens_imagem.append(self.game.spritesheet.selecionar_imagem(0, height*i, width, height))
-            self.nuvens_imagem.append(pg.transform.flip(self.nuvens_imagem[-1], True, False))
+            self.nuvens_imagem.append(
+                self.game.spritesheet.selecionar_imagem(0, height * i, width, height)
+            )
+            self.nuvens_imagem.append(
+                pg.transform.flip(self.nuvens_imagem[-1], True, False)
+            )
         self.image = random.choice(self.nuvens_imagem)
         self.image.set_colorkey(BLACK)
 
@@ -30,7 +34,9 @@ class Nuvem(pg.sprite.Sprite):
             scale = random.randrange(150, 250) / 100
         else:
             scale = 3
-        self.image = pg.transform.scale(self.image, (int(self.rect.width * scale), int(self.rect.height * scale)))
+        self.image = pg.transform.scale(
+            self.image, (int(self.rect.width * scale), int(self.rect.height * scale))
+        )
         if self.frente:
             self.rect.x = -self.rect.width
         else:
@@ -38,7 +44,7 @@ class Nuvem(pg.sprite.Sprite):
         self.rect.y = random.randrange(-500, -50)
 
     def update(self):
-        
+
         if self.rect.top > HEIGHT:
             self.kill()
         if self.frente:
@@ -46,8 +52,7 @@ class Nuvem(pg.sprite.Sprite):
             if self.rect.left > WIDTH + 50:
                 self.rect.right = -self.rect.width
 
-
-    '''class Fundo(pg.sprite.Sprite):
+    """class Fundo(pg.sprite.Sprite):
 
         def __init__(self):
 
@@ -62,5 +67,4 @@ class Nuvem(pg.sprite.Sprite):
 
         def update(self):
             self.rect.y = 200
-            self.rect.x = 200'''
-
+            self.rect.x = 200"""

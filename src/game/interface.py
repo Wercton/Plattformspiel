@@ -7,7 +7,6 @@ from os import path
 
 class Interface_Game(Game):
 
-
     def play(self):
         self.tela_inicial()
         while self.jogando:
@@ -19,15 +18,13 @@ class Interface_Game(Game):
             if self.menu:
                 self.tela_inicial()
 
-
     def draw_texto(self, texto, tamanho, cor, x, y):
 
         fonte = pg.font.Font(self.fonte_texto, tamanho)
-        texto_surface = fonte.render(texto, True, cor) # True para anti-alising
+        texto_surface = fonte.render(texto, True, cor)  # True para anti-alising
         texto_rect = texto_surface.get_rect()
         texto_rect.midtop = (x, y)
         self.tela.blit(texto_surface, texto_rect)
-
 
     def tela_inicial(self):
 
@@ -55,7 +52,6 @@ class Interface_Game(Game):
                 self.tela_opcoes()
 
             pg.display.flip()
-
 
     def tela_inicial_eventos(self):
 
@@ -89,7 +85,6 @@ class Interface_Game(Game):
                         self.decidindo = False
                         self.jogando = False
 
-
     def tela_opcoes(self):
 
         self.botao_selecionado = 0
@@ -111,8 +106,12 @@ class Interface_Game(Game):
 
         self.botao_retornar = Botao(self, 350, "RETORNAR", False)
 
-        self.botoes_opcoes = [self.botao_audio, self.botao_efeitos, \
-                            self.botao_sorte, self.botao_retornar]
+        self.botoes_opcoes = [
+            self.botao_audio,
+            self.botao_efeitos,
+            self.botao_sorte,
+            self.botao_retornar,
+        ]
 
         while self.opcoes:
 
@@ -126,7 +125,6 @@ class Interface_Game(Game):
 
             pg.display.flip()
 
-
     def tela_opcoes_eventos(self):
 
         for event in pg.event.get():
@@ -135,7 +133,6 @@ class Interface_Game(Game):
                 self.jogando = False
                 self.opcoes = False
             elif event.type == pg.KEYDOWN:
-
 
                 if event.key == pg.K_DOWN:
                     self.botoes_opcoes[self.botao_selecionado].deselecionar()
@@ -191,11 +188,10 @@ class Interface_Game(Game):
                     self.opcoes = False
                     self.botao_selecionado = 1  # but why?
 
-
     def tela_saida(self):
 
         pg.mixer.fadeout(1000)
-        self.canal_musica.play(self.audio_gameover, loops = -1)
+        self.canal_musica.play(self.audio_gameover, loops=-1)
         self.decidindo = True
         self.botao_selecionado = 0
         self.botao_tentar_novamente = Botao(self, 350, "NOVAMENTE", True)
@@ -205,14 +201,14 @@ class Interface_Game(Game):
         if self.recorde < self.pontos:
             self.recorde = self.pontos
             texto_recorde = "Novo recorde: " + str(self.recorde) + "!"
-            self.draw_texto(texto_recorde, 40, WHITE, CENTRO_WIDTH, HEIGHT/4+20)
-            with open(RECORDE_FILE, 'w') as f:
+            self.draw_texto(texto_recorde, 40, WHITE, CENTRO_WIDTH, HEIGHT / 4 + 20)
+            with open(RECORDE_FILE, "w") as f:
                 f.write(str(self.pontos))
         else:
-            texto_pontucao = 'Pontuação: ' + str(self.pontos)
+            texto_pontucao = "Pontuação: " + str(self.pontos)
             texto_recorde = "Recorde: " + str(self.recorde)
-            self.draw_texto(texto_pontucao, 30, WHITE, CENTRO_WIDTH, HEIGHT/4)
-            self.draw_texto(texto_recorde, 20, WHITE, CENTRO_WIDTH, HEIGHT/4 + 45)
+            self.draw_texto(texto_pontucao, 30, WHITE, CENTRO_WIDTH, HEIGHT / 4)
+            self.draw_texto(texto_recorde, 20, WHITE, CENTRO_WIDTH, HEIGHT / 4 + 45)
 
         while self.decidindo:
 
@@ -224,20 +220,44 @@ class Interface_Game(Game):
             if self.recorde < self.pontos:
                 self.recorde = self.pontos
                 texto_recorde = "Novo recorde: " + str(self.recorde) + "!"
-                self.draw_texto(texto_recorde, 40, WHITE, CENTRO_WIDTH, HEIGHT/4+20)
-                with open(RECORDE_FILE, 'w') as f:
+                self.draw_texto(texto_recorde, 40, WHITE, CENTRO_WIDTH, HEIGHT / 4 + 20)
+                with open(RECORDE_FILE, "w") as f:
                     f.write(str(self.pontos))
             else:
-                texto_pontucao = 'Pontuação: ' + str(self.pontos)
+                texto_pontucao = "Pontuação: " + str(self.pontos)
                 texto_recorde = "Recorde: " + str(self.recorde)
-                self.draw_texto(texto_pontucao, 30, WHITE, CENTRO_WIDTH, HEIGHT/4 - 20)
-                self.draw_texto(texto_recorde, 20, WHITE, CENTRO_WIDTH, HEIGHT/4 + 25)
+                self.draw_texto(
+                    texto_pontucao, 30, WHITE, CENTRO_WIDTH, HEIGHT / 4 - 20
+                )
+                self.draw_texto(texto_recorde, 20, WHITE, CENTRO_WIDTH, HEIGHT / 4 + 25)
 
-            self.draw_texto('Não foi dessa vez! :(', 20, BLACK, CENTRO_WIDTH, HEIGHT/2 - 40)
-            self.draw_texto('Mas não se procupe, não será uma', 18, BLACK, CENTRO_WIDTH, HEIGHT/2 + 0)
-            self.draw_texto('"quedinha" que desmotivará Pipipopo.', 18, BLACK, CENTRO_WIDTH, HEIGHT/2 + 20)
-            self.draw_texto('Ele passa bem e está pronto para', 18, BLACK, CENTRO_WIDTH, HEIGHT/2 + 40)
-            self.draw_texto('tentar outra vez!', 18, BLACK, CENTRO_WIDTH, HEIGHT/2 + 60)
+            self.draw_texto(
+                "Não foi dessa vez! :(", 20, BLACK, CENTRO_WIDTH, HEIGHT / 2 - 40
+            )
+            self.draw_texto(
+                "Mas não se procupe, não será uma",
+                18,
+                BLACK,
+                CENTRO_WIDTH,
+                HEIGHT / 2 + 0,
+            )
+            self.draw_texto(
+                '"quedinha" que desmotivará Pipipopo.',
+                18,
+                BLACK,
+                CENTRO_WIDTH,
+                HEIGHT / 2 + 20,
+            )
+            self.draw_texto(
+                "Ele passa bem e está pronto para",
+                18,
+                BLACK,
+                CENTRO_WIDTH,
+                HEIGHT / 2 + 40,
+            )
+            self.draw_texto(
+                "tentar outra vez!", 18, BLACK, CENTRO_WIDTH, HEIGHT / 2 + 60
+            )
 
             self.tela_saida_eventos()
 
@@ -245,34 +265,46 @@ class Interface_Game(Game):
 
         self.audio_gameover.fadeout(1000)
 
-
     def animacao_final(self):
         self.decidindo = True
         self.botao_selecionado = 0
         self.botao_jogar_novamente = Botao(self, 350, "NOVAMENTE", True)
         self.botao_menu = Botao(self, 415, "MENU", False)
         self.botoes = [self.botao_jogar_novamente, self.botao_menu]
-        
+
         if self.recorde < self.pontos:
-            with open(RECORDE_FILE, 'w') as f:
+            with open(RECORDE_FILE, "w") as f:
                 f.write(str(self.pontos))
-                
+
         while self.decidindo:
-            
+
             self.tela.fill(BLACK)
-            
+
             for botao in self.botoes:
                 botao.update()
-                
-            self.draw_texto('PARABÉNS!', 20, WHITE, CENTRO_WIDTH, HEIGHT/2 - 40)
-            self.draw_texto('Graças a você, Pipipopo realizou', 18, WHITE, CENTRO_WIDTH, HEIGHT/2 + 0)
-            self.draw_texto('seu sonho de acender no Cosmos.', 18, WHITE, CENTRO_WIDTH, HEIGHT/2 + 20)
-            self.draw_texto('See you in space, cowboy ;)', 18, WHITE, CENTRO_WIDTH, HEIGHT/2 + 40)
-            
+
+            self.draw_texto("PARABÉNS!", 20, WHITE, CENTRO_WIDTH, HEIGHT / 2 - 40)
+            self.draw_texto(
+                "Graças a você, Pipipopo realizou",
+                18,
+                WHITE,
+                CENTRO_WIDTH,
+                HEIGHT / 2 + 0,
+            )
+            self.draw_texto(
+                "seu sonho de acender no Cosmos.",
+                18,
+                WHITE,
+                CENTRO_WIDTH,
+                HEIGHT / 2 + 20,
+            )
+            self.draw_texto(
+                "See you in space, cowboy ;)", 18, WHITE, CENTRO_WIDTH, HEIGHT / 2 + 40
+            )
+
             self.tela_saida_eventos()
 
             pg.display.flip()
-
 
     def tela_saida_eventos(self):
 
