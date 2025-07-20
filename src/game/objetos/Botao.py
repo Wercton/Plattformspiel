@@ -1,5 +1,5 @@
 import pygame as pg
-from data.configuracoes import BOTAO, BOTAO_SELECIONADO, LAYER_SISTEMA, CENTRO_WIDTH, BLACK
+from src.configuracoes import BOTAO, BOTAO_SELECIONADO, LAYER_SISTEMA, CENTRO_WIDTH, BLACK
 
 
 class Botao(pg.sprite.Sprite):

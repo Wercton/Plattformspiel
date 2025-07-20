@@ -1,5 +1,5 @@
 import pygame as pg
-from data.interface import Interface_Game
+from src.game.interface import Interface_Game
 
 
 if __name__ == '__main__':

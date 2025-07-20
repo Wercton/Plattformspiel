@@ -1,7 +1,7 @@
 import pygame as pg
-from data.jogo_classe import Game
-from data.configuracoes import *
-from data.objetos import Botao
+from src.game.jogo_classe import Game
+from src.configuracoes import *
+from src.objetos import Botao
 from os import path
 
 

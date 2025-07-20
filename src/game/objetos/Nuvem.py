@@ -1,6 +1,6 @@
 import pygame as pg
 import random
-from data.configuracoes import LAYER_NUVENS, LAYER_NUVENS_FRENTE, WIDTH, HEIGHT, BLACK
+from src.configuracoes import LAYER_NUVENS, LAYER_NUVENS_FRENTE, WIDTH, HEIGHT, BLACK
 
 
 class Nuvem(pg.sprite.Sprite):

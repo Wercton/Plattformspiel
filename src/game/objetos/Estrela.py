@@ -1,6 +1,6 @@
 import pygame as pg
 import random
-from data.configuracoes import LAYER_NUVENS, SHINY_STAR1, SHINY_STAR2, BLACK, WIDTH, HEIGHT
+from src.configuracoes import LAYER_NUVENS, SHINY_STAR1, SHINY_STAR2, BLACK, WIDTH, HEIGHT
 
 
 class Star(pg.sprite.Sprite):

@@ -1,6 +1,6 @@
 import pygame as pg
 import random
-from data.configuracoes import LAYER_MOB, NYAH1, NYAH2, WIDTH, HEIGHT, ATENCAO1, ATENCAO2
+from src.configuracoes import LAYER_MOB, NYAH1, NYAH2, WIDTH, HEIGHT, ATENCAO1, ATENCAO2
 
 
 class Mob(pg.sprite.Sprite):

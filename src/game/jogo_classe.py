@@ -1,9 +1,9 @@
 import pygame as pg
 import random
-from data.configuracoes import *
-from data.personagem import *
+from src.configuracoes import *
+from src.game.personagem import *
 from os import path
-from data.objetos import *
+from src.game.objetos import *
 
 
 class Game:

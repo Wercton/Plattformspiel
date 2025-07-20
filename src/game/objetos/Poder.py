@@ -1,6 +1,6 @@
 import pygame as pg
 import random
-from data.configuracoes import LAYER_PODER, FOGUETÃO
+from src.configuracoes import LAYER_PODER, FOGUETÃO
 
 
 class Poder(pg.sprite.Sprite):
