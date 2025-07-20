@@ -13,6 +13,9 @@ BLACK = (0, 0, 0)
 YELLOW = (255, 255, 0)
 BG_COR_SAVE = [0, 155, 155]
 BG_COR = (25, 25, 112)
+BOTAO_COR = (70, 130, 180)
+BOTAO_COR_SELECIONADO = (138, 43, 226)
+BOTAO_SOMBRA = (40, 40, 60)
 
 # propriedades do Jogador
 ACC_JOGADOR = 0.7
