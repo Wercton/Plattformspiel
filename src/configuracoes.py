@@ -12,6 +12,7 @@ WHITE = (255, 255, 255)
 BLACK = (0, 0, 0)
 YELLOW = (255, 255, 0)
 BG_COR_SAVE = [0, 155, 155]
+BG_COR = (25, 25, 112)
 
 # propriedades do Jogador
 ACC_JOGADOR = 0.7

@@ -3,6 +3,7 @@ from src.game.jogo_classe import Game
 from src.configuracoes import *
 from src.game.objetos import Botao
 from os import path
+import random
 
 
 class Interface_Game(Game):
@@ -29,7 +30,6 @@ class Interface_Game(Game):
     def tela_inicial(self):
 
         pg.mixer.fadeout(1000)
-
         self.decidindo = True
         self.botao_selecionado = 0
         self.botao_jogar = Botao(self, 125, "JOGAR", True)
@@ -38,10 +38,13 @@ class Interface_Game(Game):
         self.botoes = [self.botao_jogar, self.botao_opcoes, self.botao_sair]
         self.opcoes = False
 
-        while self.decidindo:
+        flocos = [[random.randint(0, WIDTH), random.randint(0, HEIGHT), random.randint(2, 4)] for _ in range(5)]
 
-            self.tela.fill(self.BG_COR)
-            self.draw_texto(TITLE, 30, BLACK, 185, 20)
+        while self.decidindo:
+            self.tela.fill(BG_COR)
+            self.animar_neve(flocos)
+
+            self.draw_texto(TITLE, 30, WHITE, 185, 20)
 
             for botao in self.botoes:
                 botao.update()
@@ -49,7 +52,7 @@ class Interface_Game(Game):
             self.tela_inicial_eventos()
 
             if self.opcoes:
-                self.tela_opcoes()
+                self.tela_opcoes(flocos)
 
             pg.display.flip()
 
@@ -85,8 +88,7 @@ class Interface_Game(Game):
                         self.decidindo = False
                         self.jogando = False
 
-    def tela_opcoes(self):
-
+    def tela_opcoes(self, flocos=None):
         self.botao_selecionado = 0
 
         if self.audio:
@@ -115,8 +117,11 @@ class Interface_Game(Game):
 
         while self.opcoes:
 
-            self.tela.fill(self.BG_COR)
-            self.draw_texto("OPÇÕES", 30, BLACK, 185, 20)
+            self.tela.fill(BG_COR)
+            if flocos:
+                self.animar_neve(flocos)
+
+            self.draw_texto("OPÇÕES", 30, WHITE, 185, 20)
 
             for botao in self.botoes_opcoes:
                 botao.update()
@@ -210,9 +215,11 @@ class Interface_Game(Game):
             self.draw_texto(texto_pontucao, 30, WHITE, CENTRO_WIDTH, HEIGHT / 4)
             self.draw_texto(texto_recorde, 20, WHITE, CENTRO_WIDTH, HEIGHT / 4 + 45)
 
-        while self.decidindo:
+        flocos = [[random.randint(0, WIDTH), random.randint(0, HEIGHT), random.randint(2, 4)] for _ in range(5)]
 
+        while self.decidindo:
             self.tela.fill(self.BG_COR)
+            self.animar_neve(flocos)
 
             for botao in self.botoes:
                 botao.update()
@@ -324,3 +331,11 @@ class Interface_Game(Game):
                         self.menu = True
                     else:
                         self.menu = False
+
+    def animar_neve(self, flocos):
+        for floco in flocos:
+            pg.draw.circle(self.tela, (255, 255, 255), (floco[0], floco[1]), floco[2])
+            floco[1] += floco[2]  # velocidade proporcional ao tamanho
+            if floco[1] > HEIGHT:
+                floco[0] = random.randint(0, WIDTH)
+                floco[1] = 0
